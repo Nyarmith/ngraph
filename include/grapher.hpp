@@ -1,5 +1,5 @@
 #include "canvas.hpp"
-#include "handler.hpp"
+#include "window.hpp"
 #include "geom_entity.hpp"
 #include <unistd.h>
 #pragma once
@@ -7,7 +7,7 @@
 class grapher{
   typedef enum {quitting, running, dragging} states;
   public:
-    grapher(WINDOW* in) : canv_(in), handler_(in){
+    grapher(WINDOW* in) : canv_(in){
       state_ = running;
       noecho();
       keypad(in, TRUE);
@@ -37,7 +37,6 @@ class grapher{
       canv_.refresh();
     }
     ngl::canvas canv_;
-    ngl::handler handler_;
     //all things being rendered are in here
     std::vector<ngl::entity*> ents_;
     std::vector<ngl::entity*> menu_;
