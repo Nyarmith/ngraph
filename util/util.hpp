@@ -14,4 +14,8 @@ namespace util {
     int reflect(int x, int o){
       return 2*o-x;
     }
+    //factor out the scaffolding
+    void initialize_ncurses(){
+      initscr();
+    }
 }
