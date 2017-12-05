@@ -1,7 +1,7 @@
 #include "../util/util.hpp"
 #include "poller.hpp"
 #include "canvas.hpp"
-#include "entity.hpp"
+//#include "entity.hpp"
 #pragma once
 
 namespace ngl {
@@ -40,7 +40,7 @@ namespace ngl {
       int h_, w_;
       poller* poller_;
 
-      std::vector<entity*> ents_;
+      //std::vector<entity*> ents_;
       std::vector<handler*> callbacks_;
   };
 }
@@ -75,7 +75,7 @@ void ngl::window::update(){
     wprintw(win_, "Unhandled Event Type");
   }
   // TODO: do something with p that relates to the entities managed by window
-  typedef std::vector<entity*>::size_type s_t;
+  //typedef std::vector<entity*>::size_type s_t;
   for (s_t i=0; i<ents_.size(); ++i){
     //TODO : Make not hardcoded
     if (ents_[i]->intersect()){
@@ -87,7 +87,7 @@ void ngl::window::update(){
 
 void ngl::window::draw(){
   // TODO: do something with p that relates to the entities managed by window
-  typedef std::vector<entity*>::size_type s_t;
+  //typedef std::vector<entity*>::size_type s_t;
   for (s_t i=0; i<ents_.size(); ++i){
     //TODO : Make not hardcoded
     ents_[i]->handle();

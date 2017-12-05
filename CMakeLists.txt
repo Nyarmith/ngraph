@@ -16,6 +16,7 @@ endif ( MSVC )
 #include_directories(util)
 include_directories(include)
 add_subdirectory(src)
+add_subdirectory(tests)
 
 #include_directories(util)
 #include_directories(include)
