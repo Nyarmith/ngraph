@@ -1,6 +1,7 @@
 #include "../util/util.hpp"
 #include "poller.hpp"
 #include "canvas.hpp"
+#include "handler.hpp"
 //#include "entity.hpp"
 #pragma once
 
@@ -32,10 +33,13 @@ namespace ngl {
       void clear();
       void refresh();
 
+      void add_handler(handler* h){
+        callbacks_.push_back(h);
+      }
       bool isIntersect(int y, int x);  //coord in this window?
     protected:
-      void poll();
-      WINDOW* win_;
+      //void poll();
+      WINDOW* win_; //nothing else should be able to refresh, draw on this WINDOW*
       int y_, x_;
       int h_, w_;
       poller* poller_;
@@ -55,43 +59,21 @@ bool ngl::window::isIntersect(int y, int x){
 }
 
 void ngl::window::update(){
-
-  if (p.type == ngl::EVENT::NOEVT)
-    return;
-
-  else if (p.type == ngl::EVENT::KEYBD){
-  } else if (p.type == ngl::EVENT::KEYBD){
-  } else {
-    wprintw(win_, "Unhandled Event Type");
-  }
-  ngl::event p = poller_->poll();
-
-  if (p.type == ngl::EVENT::NOEVT)
-    return;
-
-  else if (p.type == ngl::EVENT::KEYBD){
-  } else if (p.type == ngl::EVENT::KEYBD){
-  } else {
-    wprintw(win_, "Unhandled Event Type");
-  }
-  // TODO: do something with p that relates to the entities managed by window
-  //typedef std::vector<entity*>::size_type s_t;
-  for (s_t i=0; i<ents_.size(); ++i){
-    //TODO : Make not hardcoded
-    if (ents_[i]->intersect()){
-      ents_[i]->handle();
-      break;
-    }
+  typedef std::vector<handler*>::size_type st;
+  //get event
+  ngl::event e = poller_->poll();
+  for (st i=0; i < callbacks_.size(); ++i){
+    callbacks_[i]->handle(e);
   }
 }
 
 void ngl::window::draw(){
-  // TODO: do something with p that relates to the entities managed by window
-  //typedef std::vector<entity*>::size_type s_t;
-  for (s_t i=0; i<ents_.size(); ++i){
-    //TODO : Make not hardcoded
-    ents_[i]->handle();
-  }
+//  // TODO: do something with p that relates to the entities managed by window
+//  //typedef std::vector<entity*>::size_type s_t;
+//  for (s_t i=0; i<ents_.size(); ++i){
+//    //TODO : Make not hardcoded
+//    ents_[i]->handle();
+//  }
 }
 
 void ngl::window::clear(){

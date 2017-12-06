@@ -14,26 +14,41 @@ namespace ngl{
 
   class poller{
     public:
-      poller(WINDOW* in) : scr_(in) {
+      poller(WINDOW* in) : scr_(in){
         nodelay(in, TRUE);
         mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
       }
+
       ~poller() = default;
+
       event poll(){
         event s;
         int c = wgetch(scr_);
-        if (c == ERR)
-          return -1;
 
+        if (c == ERR)
+          return s;
+
+        //if is mouse event
+        if (c == KEY_MOUSE && getmouse(&m_) == OK){
+          s.type = EVENT::KEYBD;
+          s.y = m_.y;
+          s.x = m_.x;
+          s.bstate = m_.bstate;
+        } else {
+          s.type = EVENT::MOUSE;
+          s.y = s.x = c;
+        }
         return s;
       }
+
       event poll_blocking(){
         nodelay(scr_, FALSE);
-        int c = wgetch(scr_);
+        event s = poll();
         nodelay(scr_, TRUE);
-        return c;
+        return s;
       }
 
+    private:
       static bool is_mouse(int c){
         if (c == KEY_MOUSE)
           return true;
@@ -41,24 +56,8 @@ namespace ngl{
           return false;
       }
 
-      static MEVENT* get_mouse_event(){
-        MEVENT* event=0;
-        if (getmouse(event) == OK) {
-          return event;
-        }
-        return NULL;
-      }
-
-      std::tuple<int,int> get_mousedown_xy(){
-        MEVENT m;
-        int c = getch();
-        if (c == KEY_MOUSE && getmouse(&m) == OK){
-          return std::make_tuple(m.y, m.x);
-        }
-        return std::make_tuple(-1,-1);
-      }
-
     private:
       WINDOW* scr_;
+      MEVENT m_;
   };
 }

@@ -6,8 +6,9 @@
 #include <algorithm>
 #include <cmath>
 #include <tuple>
+#include <unistd.h>
 
-namespace util {
+namespace nutil {
     int translate(int x, int o){
       return x-o;
     }
@@ -15,7 +16,18 @@ namespace util {
       return 2*o-x;
     }
     //factor out the scaffolding
-    void initialize_ncurses(){
+    void init_curses(){
+      setenv("TERM","xterm-1006",1);  //https://stackoverflow.com/questions/47256750/how-to-build-curses-program-that-supports-more-than-223-columns-of-mouse-input
       initscr();
+      keypad(stdscr, TRUE);
+      noecho();
+      //curs_set(0);   comment for testing
+      if (has_colors() == TRUE){
+        start_color();
+      } else {
+            mvprintw(1,1,"error, terminal does not support colors");
+            refresh();
+            usleep(2000);
+      }
     }
 }
