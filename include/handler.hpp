@@ -7,7 +7,7 @@
 namespace ngl {
   class handler {
     public:
-      handler(int y, int x, int h, int w, std::function<void(event&)> f=[](event &e) {return ;});
+      handler(int y, int x, int h, int w, std::function<void(event&)> f=[](event &e) {return ;}) : y_(y), x_(x), h_(h), w_(w), f_(f) { };
 
       virtual bool intersect(int y, int x){
         return (y_ <= y && y < y_+ h_ && x_ <= x && x < x_ + w_);

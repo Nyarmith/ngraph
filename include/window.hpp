@@ -9,8 +9,15 @@ namespace ngl {
   class window : public canvas {
     public:
       window(int y, int x, int h, int w) : y_(y), x_(x), h_(h), w_(w){
+        //all window related initialization happens here
         win_ = newwin(h,w,y,x);
+        //keypad(win_, TRUE);
+        wrefresh(win_);
+        wclear(win_);
+        //wrefresh(win_);
+        //wclear(win_);
         poller_ = new poller(win_);
+        //nodelay(win_, TRUE);
       };
       ~window() {
         delwin(win_);
@@ -132,6 +139,6 @@ void ngl::window::text(int y, int x, std::string str, int just){
 void ngl::window::set_hl(int pair){
   attron(pair);
 }
-void ngl::canvas::clear_hl(){
+void ngl::window::clear_hl(){
   attron(0);
 }

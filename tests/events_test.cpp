@@ -9,7 +9,8 @@ void drawhandler(const ngl::event &e, ngl::canvas &c){
 
 int main(){
   using namespace std::placeholders;
-  initscr(); //may not be necessary with the individual newwin()s and initscr()s
+
+  nutil::init_curses();
 
   ngl::window main_window(0,0,60,60);
 

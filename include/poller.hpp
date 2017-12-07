@@ -15,8 +15,6 @@ namespace ngl{
   class poller{
     public:
       poller(WINDOW* in) : scr_(in){
-        nodelay(in, TRUE);
-        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
       }
 
       ~poller() = default;
