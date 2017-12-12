@@ -14,14 +14,12 @@ namespace ngl{
 
   class poller{
     public:
-      poller(WINDOW* in) : scr_(in){
-      }
-
+      poller() = default;
       ~poller() = default;
 
       event poll(){
         event s;
-        int c = wgetch(scr_);
+        int c = getch();
 
         if (c == ERR)
           return s;
@@ -40,9 +38,9 @@ namespace ngl{
       }
 
       event poll_blocking(){
-        nodelay(scr_, FALSE);
+        nodelay(stdscr, FALSE);
         event s = poll();
-        nodelay(scr_, TRUE);
+        nodelay(stdscr, TRUE);
         return s;
       }
 
@@ -55,7 +53,6 @@ namespace ngl{
       }
 
     private:
-      WINDOW* scr_;
       MEVENT m_;
   };
 }

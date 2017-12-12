@@ -9,28 +9,25 @@
 #include <unistd.h>
 
 namespace nutil {
-    int translate(int x, int o){
-      return x-o;
+  //factor out the scaffolding
+  void init_curses(){
+    setenv("TERM","xterm-1006",1);  //https://stackoverflow.com/questions/47256750/how-to-build-curses-program-that-supports-more-than-223-columns-of-mouse-input
+    initscr();
+    //cbreak();
+    keypad(stdscr, TRUE);
+    nodelay(stdscr, TRUE);
+    //noecho();      //comment for testing
+    mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+    //curs_set(0);   //comment for testing
+    if (has_colors() == TRUE){
+      start_color();
+    } else {
+      mvprintw(1,1,"error, terminal does not support colors");
+      refresh();
+      usleep(200000);
     }
-    int reflect(int x, int o){
-      return 2*o-x;
-    }
-    //factor out the scaffolding
-    void init_curses(){
-      setenv("TERM","xterm-1006",1);  //https://stackoverflow.com/questions/47256750/how-to-build-curses-program-that-supports-more-than-223-columns-of-mouse-input
-      initscr();
-      //cbreak();
-      //keypad(stdscr, TRUE);
-      //nodelay(stdscr, TRUE);
-      //mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-      //noecho();
-      //curs_set(0);   comment for testing
-      if (has_colors() == TRUE){
-        start_color();
-      } else {
-            mvprintw(1,1,"error, terminal does not support colors");
-            refresh();
-            usleep(2000);
-      }
-    }
+
+    clear();
+  }
 }
+

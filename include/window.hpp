@@ -1,5 +1,4 @@
 #include "../util/util.hpp"
-#include "poller.hpp"
 #include "canvas.hpp"
 #include "handler.hpp"
 //#include "entity.hpp"
@@ -8,26 +7,13 @@
 namespace ngl {
   class window : public canvas {
     public:
-      window(int y, int x, int h, int w) : y_(y), x_(x), h_(h), w_(w){
-        //all window related initialization happens here
-        win_ = newwin(h,w,y,x);
-        //keypad(win_, TRUE);
-        wrefresh(win_);
-        wclear(win_);
-        //wrefresh(win_);
-        //wclear(win_);
-        poller_ = new poller(win_);
-        //nodelay(win_, TRUE);
-      };
+      window(int y, int x, int h, int w) : y_(y), x_(x), h_(h), w_(w) { };
       ~window() {
-        delwin(win_);
       }
-      window& operator=(const window& o) = delete;
-
-      //entity mgmt
-      
+      window& operator=(const window& o);
 
       //drawing
+      void add_char(int y, int x, int c);
       void stroke(int y1, int x1, int y2, int x2);
       void square(int y, int x, int height, int width);
       void text(int y, int x, std::string str, int just=0);
@@ -35,7 +21,7 @@ namespace ngl {
       void clear_hl();
 
       //interface
-      void update();    //actions to do every frame
+      void update(event &e);    //actions to do every frame
       void draw();
       void clear();
       void refresh();
@@ -49,7 +35,6 @@ namespace ngl {
       WINDOW* win_; //nothing else should be able to refresh, draw on this WINDOW*
       int y_, x_;
       int h_, w_;
-      poller* poller_;
 
       //std::vector<entity*> ents_;
       std::vector<handler*> callbacks_;
@@ -65,22 +50,21 @@ bool ngl::window::isIntersect(int y, int x){
   return false;
 }
 
-void ngl::window::update(){
+void ngl::window::update(event &e){
   typedef std::vector<handler*>::size_type st;
-  //get event
-  ngl::event e = poller_->poll();
+
   for (st i=0; i < callbacks_.size(); ++i){
     callbacks_[i]->handle(e);
   }
 }
 
 void ngl::window::draw(){
-//  // TODO: do something with p that relates to the entities managed by window
-//  //typedef std::vector<entity*>::size_type s_t;
-//  for (s_t i=0; i<ents_.size(); ++i){
-//    //TODO : Make not hardcoded
-//    ents_[i]->handle();
-//  }
+  //  // TODO: do something with p that relates to the entities managed by window
+  //  //typedef std::vector<entity*>::size_type s_t;
+  //  for (s_t i=0; i<ents_.size(); ++i){
+  //    //TODO : Make not hardcoded
+  //    ents_[i]->handle();
+  //  }
 }
 
 void ngl::window::clear(){
@@ -100,7 +84,7 @@ void ngl::window::stroke(int y1, int x1, int y2, int x2){
     step = -1;
   }
   while(x1 != x2){
-    mvwaddch(win_, floor(y), x1, 'x');
+    mvaddch(floor(y) - y_, x1 - x_, 'x');
     y  += slope;
     x1 += step;
   }
@@ -111,23 +95,23 @@ void ngl::window::square(int y, int x, int height, int width){
   int i=0;
 
   for (i=x; i < x+width; ++i)
-    mvwaddch(win_,y,i,'#');
+    mvwaddch(win_,y - y_,i,'#');
 
   //draw left and right borders
   for (i=y+1; i<y+height-1; ++i){
-    mvwaddch(win_,i,x,'#');
-    mvwaddch(win_,i,x+width-1,'#');
+    mvaddch(i,x - x_,'#');
+    mvaddch(i,x - x_ + width-1,'#');
   }
 
   //draw bottom border
   for (i=x; i < x+width; ++i)
-    mvwaddch(win_,y+height-1,i,'#');
+    mvaddch(y - y_ +height-1,i,'#');
 }
 
 //void ellipse(int y, int x, int height, int width);
 void ngl::window::text(int y, int x, std::string str, int just){
   if (just == 0){
-    mvwprintw(win_,y,x,"%s",str.data());
+    mvprintw(y - y_, x - x_,"%s",str.data());
   }
   else if (just != 0){
     std::string arg = "%-";
@@ -136,9 +120,15 @@ void ngl::window::text(int y, int x, std::string str, int just){
     mvwprintw(win_,y,x,"%s",str.data());
   }
 }
+
+void ngl::window::add_char(int y, int x, int c){
+  mvaddch(y, x, c);
+}
+
 void ngl::window::set_hl(int pair){
   attron(pair);
 }
+
 void ngl::window::clear_hl(){
   attron(0);
 }
