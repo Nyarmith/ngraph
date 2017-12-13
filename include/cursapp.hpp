@@ -1,6 +1,8 @@
 #include "../util/util.hpp"
 #include "window.hpp"
 
+
+
 namespace ngl {
   class cursapp {
     public:
@@ -39,7 +41,7 @@ namespace ngl {
     event e = poller_.poll();
 
     //update meta-cursor state
-    if (e.type == EVENT::MOUSE){
+    if (e.type == EVENT::MOUSE){   //curs_y, curs_x events are somehow updating. Figure out why.
       curs_y = e.y;
       curs_x = e.x;
     }
@@ -47,6 +49,12 @@ namespace ngl {
     for (window w : windows_)
       if (w.isIntersect(curs_y, curs_x))
         w.update(e);
+
+#ifdef DEBUG
+
+    mvprintw(3,3, "event type: %d,   x coord : %d , y coord : %d", e.type, curs_x, curs_y);
+
+#endif
   }
 
   void cursapp::draw(){
@@ -61,6 +69,7 @@ namespace ngl {
 
   cursapp::cursapp(){
     nutil::init_curses();
+    refresh();
   }
 
 }

@@ -16,9 +16,9 @@ namespace nutil {
     //cbreak();
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
-    //noecho();      //comment for testing
+    noecho();      //comment for testing
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-    //curs_set(0);   //comment for testing
+    curs_set(0);   //comment for testing
     if (has_colors() == TRUE){
       start_color();
     } else {

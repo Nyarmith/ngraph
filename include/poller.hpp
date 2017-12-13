@@ -26,12 +26,12 @@ namespace ngl{
 
         //if is mouse event
         if (c == KEY_MOUSE && getmouse(&m_) == OK){
-          s.type = EVENT::KEYBD;
+          s.type = EVENT::MOUSE;
           s.y = m_.y;
           s.x = m_.x;
           s.bstate = m_.bstate;
         } else {
-          s.type = EVENT::MOUSE;
+          s.type = EVENT::KEYBD;
           s.y = s.x = c;
         }
         return s;

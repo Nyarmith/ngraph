@@ -1,3 +1,4 @@
+#define DEBUG
 #include <functional>
 #include "../include/cursapp.hpp"
 
@@ -8,6 +9,9 @@ void drawhandler(const ngl::event &e, ngl::canvas &c){
     std::string t = "we got a : ";
     c.text(10,10, t + static_cast<char>(e.x));
   }
+
+  //draw border
+  c.square(0,0,60,60);
 }
 
 int main(){
