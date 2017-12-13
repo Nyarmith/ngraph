@@ -52,7 +52,12 @@ namespace ngl {
 
 #ifdef DEBUG
 
-    mvprintw(3,3, "event type: %d,   x coord : %d , y coord : %d", e.type, curs_x, curs_y);
+    static event le;
+    if (e.type != EVENT::NOEVT){
+      le = e;
+    }
+    mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, curs_x, curs_y);
+    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d", le.type,le.x,le.y);
 
 #endif
   }
