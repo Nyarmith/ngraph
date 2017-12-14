@@ -1,7 +1,7 @@
 #include "../util/util.hpp"
 #include "canvas.hpp"
 #include "handler.hpp"
-//#include "entity.hpp"
+#include "entity.hpp"
 #pragma once
 
 namespace ngl {
@@ -38,6 +38,7 @@ namespace ngl {
 
       //std::vector<entity*> ents_;
       std::vector<handler*> callbacks_;
+      std::vector<entity*> entities_;
   };
 }
 
@@ -60,11 +61,11 @@ void ngl::window::update(event &e){
 
 void ngl::window::draw(){
   //  // TODO: do something with p that relates to the entities managed by window
-  //  //typedef std::vector<entity*>::size_type s_t;
-  //  for (s_t i=0; i<ents_.size(); ++i){
-  //    //TODO : Make not hardcoded
-  //    ents_[i]->handle();
-  //  }
+  typedef std::vector<entity*>::size_type s_t;
+  for (s_t i=0; i<entities_.size(); ++i){
+      //TODO : Make not hardcoded
+      entities_[i]->handle();
+    }
 }
 
 void ngl::window::clear(){
