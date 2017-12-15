@@ -17,8 +17,6 @@ void drawhandler(const ngl::event &e, ngl::canvas &c){
 int main(){
   using namespace std::placeholders;
 
-  nutil::init_curses();
-
   ngl::cursapp m;
   ngl::window main_window(0,0,60,60);
 
