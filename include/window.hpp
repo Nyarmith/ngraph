@@ -26,9 +26,9 @@ namespace ngl {
       void clear();
       void refresh();
 
-      void add_handler(handler* h){
-        callbacks_.push_back(h);
-      }
+      void add_handler(handler* h){ callbacks_.push_back(h); }
+      void add_entity(entity* h){ entities_.push_back(h); }
+
       bool isIntersect(int y, int x);  //coord in this window?
     protected:
       //void poll();
@@ -60,11 +60,9 @@ void ngl::window::update(event &e){
 }
 
 void ngl::window::draw(){
-  //  // TODO: do something with p that relates to the entities managed by window
   typedef std::vector<entity*>::size_type s_t;
   for (s_t i=0; i<entities_.size(); ++i){
-      //TODO : Make not hardcoded
-      entities_[i]->handle();
+      entities_[i]->draw(*this);
     }
 }
 
@@ -76,6 +74,7 @@ void ngl::window::refresh(){
   wrefresh(win_);
 }
 
+// TODO : Modify drawing methods so that they don't draw outside the screen -- Priority URGENT
 void ngl::window::stroke(int y1, int x1, int y2, int x2){
   double slope = static_cast<double>(y2 - y1) / (x2 - x1);
   double y = y1;
