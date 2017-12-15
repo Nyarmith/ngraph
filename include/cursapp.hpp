@@ -1,7 +1,11 @@
 #include "../util/util.hpp"
 #include "window.hpp"
 
-
+#ifdef DEBUG
+    static ngl::event e;
+    static ngl::event le;
+    static int curs_y, curs_x;
+#endif
 
 namespace ngl {
   class cursapp {
@@ -23,9 +27,9 @@ namespace ngl {
   void cursapp::run(){
     while(true){
       update();
+      clear();
       draw();
       usleep( 33000 );
-      clear();
     }
   }
 
@@ -51,20 +55,24 @@ namespace ngl {
         w.update(e);
 
 #ifdef DEBUG
-
+    ::e = e;
     static event le;
     if (e.type != EVENT::NOEVT){
       le = e;
     }
-    mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, curs_x, curs_y);
-    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d", le.type,le.x,le.y);
-
+    ::curs_y = curs_y; ::curs_x = curs_x;
 #endif
   }
 
   void cursapp::draw(){
     for (window w : windows_)
       w.draw();
+
+#ifdef DEBUG
+    mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, curs_x, curs_y);
+    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d", le.type,le.x,le.y);
+#endif
+
     refresh();
   }
 
