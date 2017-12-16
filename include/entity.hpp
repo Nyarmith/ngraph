@@ -7,6 +7,7 @@ namespace ngl {
     public:
       virtual ~entity() = default;
       virtual void draw(canvas& g) = 0;
+      virtual void update(const event& e){ };
       std::string getid();
   };
 }

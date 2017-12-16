@@ -54,8 +54,13 @@ bool ngl::window::isIntersect(int y, int x){
 void ngl::window::update(event &e){
   typedef std::vector<handler*>::size_type st;
 
-  for (st i=0; i < callbacks_.size(); ++i){
-    callbacks_[i]->handle(e);
+ //TODO: test intersection in update loop
+  for (st i=0; i < callbacks_.size(); ++i){ 
+    callbacks_[i]->handle(e); 
+  }
+
+  for (st i=0; i < entities_.size(); ++i){
+    entities_[i]->update(e);
   }
 }
 
