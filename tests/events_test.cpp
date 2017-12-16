@@ -2,6 +2,9 @@
 #include <functional>
 #include "../include/cursapp.hpp"
 
+
+//class border_and_event_test : 
+
 void drawhandler(const ngl::event &e, ngl::canvas &c){
   if (e.type == ngl::EVENT::MOUSE){
     c.text(e.y, e.x, "xxxx");

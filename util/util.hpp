@@ -13,11 +13,12 @@ namespace nutil {
   void init_curses(){
     setenv("TERM","xterm-1006",1);  //https://stackoverflow.com/questions/47256750/how-to-build-curses-program-that-supports-more-than-223-columns-of-mouse-input
     initscr();
-    //cbreak();
+    cbreak();
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
-    noecho();      //comment for testing
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+    printf("\033[?1003h\n"); //lets curses track mouse movement events
+    noecho();      //comment for testing
     curs_set(0);   //comment for testing
     if (has_colors() == TRUE){
       start_color();
