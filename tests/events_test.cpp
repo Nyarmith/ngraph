@@ -4,7 +4,6 @@
 
 
 //class border_and_event_test : 
-
 void drawhandler(const ngl::event &e, ngl::canvas &c){
   if (e.type == ngl::EVENT::MOUSE){
     c.text(e.y, e.x, "xxxx");
@@ -17,14 +16,28 @@ void drawhandler(const ngl::event &e, ngl::canvas &c){
   c.square(0,0,60,60);
 }
 
+class menudrawer : public ngl::entity{
+
+  void update(const ngl::event &e){
+  using namespace std::placeholders;
+    f = std::bind(drawhandler, e, _1);
+  }
+
+  void draw(ngl::canvas &c){
+    f(c);
+  }
+  std::function<void(ngl::canvas &g)> f;
+};
+
 int main(){
   using namespace std::placeholders;
 
   ngl::cursapp m;
   ngl::window main_window(0,0,60,60);
 
-  std::function<void(const ngl::event &e)> f = std::bind(drawhandler, _1, main_window);
-  main_window.add_handler(new ngl::handler(0,0,40,40,f));
+  menudrawer t;
+  
+  main_window.add_entity(&t);
 
   m.addWindow(main_window);
   m.run();
