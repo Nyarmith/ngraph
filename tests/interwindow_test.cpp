@@ -67,11 +67,11 @@ int main(){
   amorphous_entity e;
 
   ngl::cursapp m;
-  option a(2,5,5,15,"square");
+  option a(2,5,2,15,"square");
   a.setcallback( [&e](){e.update_state(0);});
-  option b(7,5,5,15,"line");
+  option b(4,5,2,15,"line");
   a.setcallback( [&e](){e.update_state(1);});
-  option c(12,5,5,15,"nothing");
+  option c(6,5,2,15,"nothing");
   a.setcallback( [&e](){e.update_state(2);});
   ngl::window menu_window (0,0,20,20);
   menu_window.add_entity(&a);
