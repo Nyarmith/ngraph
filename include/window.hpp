@@ -21,7 +21,7 @@ namespace ngl {
       void clear_hl();
 
       //interface
-      void update(event &e);    //actions to do every frame
+      void update(event &e, int y, int x);    //actions to do every frame
       void draw();
       void clear();
       void refresh();
@@ -51,35 +51,38 @@ bool ngl::window::isIntersect(int y, int x){
   return false;
 }
 
-void ngl::window::update(event &e){
+void ngl::window::update(event &e, int y, int x){
   typedef std::vector<handler*>::size_type st;
+  y -= y_;
+  x -= x_;
 
- //TODO: test intersection in update loop
   for (st i=0; i < callbacks_.size(); ++i){ 
-    callbacks_[i]->handle(e); 
+    if (callbacks_[i]->intersect(y,x))
+      callbacks_[i]->handle(e); 
   }
 
   for (st i=0; i < entities_.size(); ++i){
-    entities_[i]->update(e);
-  }
-}
+    if (entities_[i]->intersect(y,x))
+        entities_[i]->update(e);
+        }
+        }
 
-void ngl::window::draw(){
-  typedef std::vector<entity*>::size_type s_t;
-  for (s_t i=0; i<entities_.size(); ++i){
-      entities_[i]->draw(*this);
-    }
-}
+        void ngl::window::draw(){
+        typedef std::vector<entity*>::size_type s_t;
+        for (s_t i=0; i<entities_.size(); ++i){
+        entities_[i]->draw(*this);
+        }
+        }
 
-void ngl::window::clear(){
-  wclear(win_);
-}
+        void ngl::window::clear(){
+        wclear(win_);
+        }
 
-void ngl::window::refresh(){
-  wrefresh(win_);
-}
+        void ngl::window::refresh(){
+        wrefresh(win_);
+        }
 
-// TODO : Modify drawing methods so that they don't draw outside the screen -- Priority URGENT
+        // TODO : Modify drawing methods so that they don't draw outside the screen -- Priority URGENT
 void ngl::window::stroke(int y1, int x1, int y2, int x2){
   double slope = static_cast<double>(y2 - y1) / (x2 - x1);
   double y = y1;

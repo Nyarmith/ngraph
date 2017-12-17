@@ -52,7 +52,7 @@ namespace ngl {
 
     for (window w : windows_)
       if (w.isIntersect(curs_y, curs_x))
-        w.update(e);
+        w.update(e, curs_y, curs_x);
 
 #ifdef DEBUG
     ::e = e;
