@@ -108,8 +108,10 @@ void ngl::window::square(int y, int x, int height, int width){
 
 //void ellipse(int y, int x, int height, int width);
 void ngl::window::text(int y, int x, std::string str, int just){
+  int s_x = x_ + x;
+  int s_y = y_ + y;
   if (just == 0){
-    mvprintw(y - y_, x - x_,"%s",str.data());
+    mvprintw(s_y, s_x,"%s",str.data());
   }
   else if (just != 0){
     std::string arg = "%-";
