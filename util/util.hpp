@@ -7,6 +7,7 @@
 #include <cmath>
 #include <tuple>
 #include <unistd.h>
+#include <functional>
 
 namespace nutil {
   //factor out the scaffolding
