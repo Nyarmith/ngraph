@@ -2,9 +2,9 @@
 #include "window.hpp"
 
 #ifdef DEBUG
-    static ngl::event e;
-    static ngl::event le;
-    static int curs_y, curs_x;
+static ngl::event e;
+static ngl::event le;
+static int curs_y, curs_x;
 #endif
 
 namespace ngl {
@@ -14,6 +14,10 @@ namespace ngl {
       ~cursapp() = default;
       void run();
       void addWindow(window &n);
+
+      //fancy ways to add a window
+      std::vector<window> partition(int n);  //partition evenly among n subwindows
+      std::vector<window> partition(std::vector<int> n);  //partition in given ratio
     private:
       void update();
       void draw();
@@ -85,4 +89,44 @@ namespace ngl {
     refresh();
   }
 
+  std::vector<window> cursapp::partition(int n){  //horizontally partition evenly among n subwindows
+    std::vector<window> result;
+    int y, x;
+    getmaxyx(stdscr,y,x);
+    int width = x/n;
+    int leftover = x%n;
+    int start=0;
+    int carry=0;;
+    for (int i=0; i<n; ++i){
+      if (leftover > 0){
+        carry = 1;
+        --leftover;
+      }
+      result.push_back(window(0,start,y,width+carry));
+      start += width + carry;
+      carry = 0;
+    }
+
+    return result;
+  }
+
+  std::vector<window> cursapp::partition(std::vector<int> n){  //partition in given ratio
+    std::vector<window> result;
+    int y, x;
+    getmaxyx(stdscr,y,x);
+    int sum=0;
+    int start=0;
+    for (int i : n)
+      sum += i;
+
+    for (int i : n){
+      int width = ((float)i / (float)sum) * x;
+      result.push_back(window(0,start,y,start + width));
+      start += width;
+    }
+
+    return result;
+  }
+
 }
+

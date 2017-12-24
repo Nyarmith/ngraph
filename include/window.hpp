@@ -30,6 +30,9 @@ namespace ngl {
       void add_entity(entity* h){ entities_.push_back(h); }
 
       bool isIntersect(int y, int x);  //coord in this window?
+
+      //adding other widnows
+      void split(window& o);
     protected:
       //void poll();
       int y_, x_;
@@ -131,4 +134,13 @@ void ngl::window::set_hl(int pair){
 
 void ngl::window::clear_hl(){
   attron(0);
+}
+
+void ngl::window::split(ngl::window& o){
+  o.y_ = y_ + h_ / 2 + h_ % 2;
+  o.x_ = x_ + w_ / 2 + h_ % 2;
+  o.h_ = h_ / 2;
+  o.w_ = w_ / 2;
+  h_ = h_ / 2 + h_ % 2;
+  w_ = w_ / 2 + w_ % 2;
 }
