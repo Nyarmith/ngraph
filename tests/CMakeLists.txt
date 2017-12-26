@@ -1,8 +1,10 @@
 add_executable(events_test events_test.cpp)
 add_executable(entity_test entity_test.cpp)
 add_executable(interwindow_test interwindow_test.cpp)
+add_executable(gui_test1 gui_test1.cpp)
 target_link_libraries(events_test curses)
 target_link_libraries(entity_test curses)
 target_link_libraries(interwindow_test curses)  #todo, add to lib separately and link against lib
+target_link_libraries(gui_test1 curses)
 #add_executable(drawing_test events_test.cpp)
 #add_executable(windows_test events_test.cpp)
