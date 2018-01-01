@@ -59,10 +59,11 @@ namespace ngl {
         w.update(e, curs_y, curs_x);
 
 #ifdef DEBUG
-    ::e = e;
-    static event le;
+    //::e = e;
     if (e.type != EVENT::NOEVT){
-      le = e;
+      le.type = e.type;
+      le.x = e.x;
+      le.y = e.y;
     }
     ::curs_y = curs_y; ::curs_x = curs_x;
 #endif
@@ -73,7 +74,7 @@ namespace ngl {
       w.draw();
 
 #ifdef DEBUG
-    mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, curs_x, curs_y);
+    mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, ::curs_x, ::curs_y);
     mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d", le.type,le.x,le.y);
 #endif
 
