@@ -13,7 +13,7 @@ void drawhandler(const ngl::event &e, ngl::canvas &c){
   }
 
   //draw border
-  c.square(0,0,60,60);
+  c.rect(0,0,60,60);
 }
 
 class menudrawer : public ngl::entity{

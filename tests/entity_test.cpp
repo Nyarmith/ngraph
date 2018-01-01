@@ -12,7 +12,7 @@ class mousefollower : public ngl::entity {
       y = e.y;
     }
   };
-  void draw(ngl::canvas& g){ g.square(y-1,x-1, 3, 3);}
+  void draw(ngl::canvas& g){ g.rect(y-1,x-1, 3, 3);}
   mousefollower(){ x = y = 5; }
 };
 

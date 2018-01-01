@@ -50,7 +50,7 @@ class amorphous_entity : public ngl::entity {
     int y = 10, x = 10;
     switch(state){
       case 0:
-        c.square(2,2,y,x);
+        c.rect(2,2,y,x);
         break;
       case 1:
         c.text(y,x,"########");

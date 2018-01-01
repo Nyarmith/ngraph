@@ -5,17 +5,17 @@
 #pragma once
 
 namespace ngl {
-  class window : public canvas {
+  class win_obj : public canvas {
     public:
-      window(int y, int x, int h, int w) : y_(y), x_(x), h_(h), w_(w) { };
-      ~window() {
+      win_obj(int y, int x, int h, int w) : y_(y), x_(x), h_(h), w_(w) { };
+      ~win_obj() {
       }
-      window& operator=(const window& o);
+      win_obj& operator=(const win_obj& o);
 
       //drawing
       void add_char(int y, int x, int c);
-      void stroke(int y1, int x1, int y2, int x2);
-      void square(int y, int x, int height, int width);
+      void stroke(int y1, int x1, int y2, int x2, int ch='x');
+      void rect(int y, int x, int height, int width, int ch='#');
       void text(int y, int x, std::string str, int just=0);
       void set_hl(int pair);
       void clear_hl();
@@ -29,10 +29,10 @@ namespace ngl {
       void add_handler(handler* h){ callbacks_.push_back(h); }
       void add_entity(entity* h){ entities_.push_back(h); }
 
-      bool isIntersect(int y, int x);  //coord in this window?
+      bool intersect(int y, int x);  //global coord in this win_obj?
 
       //adding other widnows
-      void split(window& o);
+      win_obj* split();
     protected:
       //void poll();
       int y_, x_;
@@ -42,18 +42,40 @@ namespace ngl {
       std::vector<handler*> callbacks_;
       std::vector<entity*> entities_;
   };
+
+  class window {
+    public:
+      window();
+      window(int y, int x, int h, int w) { win_ = new win_obj(y,x,h,w); };
+      window(const window &o) { win_ = o.win_; };
+      window(win_obj &o)      { win_ = &o; };
+      window& operator=(const window &o) = delete;
+      void update(event &e, int y, int x) {win_->update(e,y,x);};
+      void draw() { win_->draw(); };
+      void refresh() { win_->refresh(); };
+      void add_entity(entity *e)  { win_->add_entity(e); };
+      void add_handler(handler *h){ win_->add_handler(h);};
+      bool intersect(int y,int x){ return win_->intersect(y,x); };
+      window split(window& o){
+        win_obj* new_obj = (o.win_)->split();
+        return window(*new_obj);
+      };
+    private:
+      win_obj* win_;
+  };
+
 }
 
 
 //definitions
-bool ngl::window::isIntersect(int y, int x){
+bool ngl::win_obj::intersect(int y, int x){
   if (y_ <= y && y < y_+ h_ && x_ <= x && x < x_ + w_)
     return true;
 
   return false;
 }
 
-void ngl::window::update(event &e, int y, int x){
+void ngl::win_obj::update(event &e, int y, int x){
   typedef std::vector<handler*>::size_type st;
   y -= y_;
   x -= x_;
@@ -69,7 +91,7 @@ void ngl::window::update(event &e, int y, int x){
         }
         }
 
-        void ngl::window::draw(){
+        void ngl::win_obj::draw(){
         typedef std::vector<entity*>::size_type s_t;
         for (s_t i=0; i<entities_.size(); ++i){
         entities_[i]->draw(*this);
@@ -77,7 +99,7 @@ void ngl::window::update(event &e, int y, int x){
         }
 
         // TODO : Modify drawing methods so that they don't draw outside the screen -- Priority URGENT
-void ngl::window::stroke(int y1, int x1, int y2, int x2){
+void ngl::win_obj::stroke(int y1, int x1, int y2, int x2, int ch){
   double slope = static_cast<double>(y2 - y1) / (x2 - x1);
   double y = y1;
   int step=1;
@@ -86,61 +108,70 @@ void ngl::window::stroke(int y1, int x1, int y2, int x2){
     step = -1;
   }
   while(x1 != x2){
-    mvaddch(floor(y) - y_, x1 - x_, 'x');
+    add_char(floor(y), x1, ch);
     y  += slope;
     x1 += step;
   }
 }
-void ngl::window::square(int y, int x, int height, int width){
-  //draw top border
+void ngl::win_obj::rect(int y, int x, int height, int width, int ch){
   int i=0;
+  
+  for (i=x; i < x+width; ++i){  //draw top and bottom borders
+    add_char(y, i, ch);
+    add_char(y +height-1,i, ch);
+  }
+  
+  for (i=y+1; i<y+height-1; ++i){  //draw left and right borders
+    add_char(i,x,ch);
+    add_char(i,x+width-1,ch);
+  }
+}
+
+//todo: add some kind of thing for str justiciation
+void ngl::win_obj::text(int y, int x, std::string str, int just){
   int s_x = x_ + x;
   int s_y = y_ + y;
 
-  //draw top and bottom borders
-  for (i=s_x; i < s_x+width; ++i){
-    mvaddch(s_y, i,'#');
-    mvaddch(s_y +height-1,i,'#');
+  //out of bounds
+  if ( 0  > y || y > h_ || x > w_ || (x + (int)str.size()) < 0 )
+    return;
+  //fully fits in perfectly
+  else if (0 < x && x + (int)str.length() < w_){
+    mvprintw(s_y, s_x, str.data());
   }
-  //draw left and right borders
-  for (i=s_y+1; i<s_y+height-1; ++i){
-    mvaddch(i,s_x,'#');
-    mvaddch(i,s_x+width-1,'#');
+  //cut off on left
+  else if (x < 0 && x + (int)str.length() < w_){
+    mvprintw(s_y, s_x, str.substr(-x).data());
   }
-}
-
-//void ellipse(int y, int x, int height, int width);
-void ngl::window::text(int y, int x, std::string str, int just){
-  int s_x = x_ + x;
-  int s_y = y_ + y;
-  if (just == 0){
-    mvprintw(s_y, s_x,"%s",str.data());
+  //cut off on right
+  else if (x > 0 && x + (int)str.length() > w_){
+    mvprintw(s_y, s_x, str.substr(0,w_ - x).data());
   }
-  else if (just != 0){
-    std::string arg = "%-";
-    arg += just;
-    arg += "s";
-    mvprintw(y,x,"%s",str.data());
+  //cut off on both sides
+  else if (x < 0 && x + (int)str.length() > w_){
+    mvprintw(s_y, x_, str.substr(-x,w_ ).data());
   }
 }
 
-void ngl::window::add_char(int y, int x, int c){
-  mvaddch(y, x, c);
+void ngl::win_obj::add_char(int y, int x, int c){
+  if (0 <= x && x < w_ && 0 <= y && y < h_)
+    mvaddch(y_ + y,  x_ + x, c);
 }
 
-void ngl::window::set_hl(int pair){
+void ngl::win_obj::set_hl(int pair){
   attron(pair);
 }
 
-void ngl::window::clear_hl(){
+void ngl::win_obj::clear_hl(){
   attron(0);
 }
 
-void ngl::window::split(ngl::window& o){
-  o.y_ = y_ + h_ / 2 + h_ % 2;
-  o.x_ = x_ + w_ / 2 + h_ % 2;
-  o.h_ = h_ / 2;
-  o.w_ = w_ / 2;
+ngl::win_obj* ngl::win_obj::split(){
+  int o_y = y_ + h_ / 2 + h_ % 2;
+  int o_x = x_ + w_ / 2 + h_ % 2;
+  int o_h = h_ / 2;
+  int o_w = w_ / 2;
   h_ = h_ / 2 + h_ % 2;
   w_ = w_ / 2 + w_ % 2;
+  return new win_obj(o_y, o_x, o_h, o_w);
 }

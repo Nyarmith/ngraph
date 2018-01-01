@@ -55,7 +55,7 @@ namespace ngl {
     }
 
     for (window w : windows_)
-      if (w.isIntersect(curs_y, curs_x))
+      if (w.intersect(curs_y, curs_x))
         w.update(e, curs_y, curs_x);
 
 #ifdef DEBUG
@@ -103,6 +103,7 @@ namespace ngl {
         --leftover;
       }
       result.push_back(window(0,start,y,width+carry));
+      addWindow(result[result.size()-1]);
       start += width + carry;
       carry = 0;
     }
@@ -122,6 +123,7 @@ namespace ngl {
     for (int i : n){
       int width = ((float)i / (float)sum) * x;
       result.push_back(window(0,start,y,start + width));
+      addWindow(result[result.size()-1]);
       start += width;
     }
 
