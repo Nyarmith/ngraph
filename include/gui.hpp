@@ -40,13 +40,18 @@ namespace ngl {
       text_button(int y, int x, int h, int w, std::string text="dflt_bttn",
           std::function<void()> c=[](){}) :
         gui_entity(y,x,h,w,c), m_(text) { }
+      text_button(int y, int x, std::string text="dflt_bttn",
+          std::function<void()> c=[](){}) : m_(text){
+        x_=x; y_=y; h_=1; w_=m_.size()+4;
+        callback_=c;
+      }
       text_button(std::string text="dflt_bttn",
           std::function<void()> c=[](){}) : m_(text){
-        x_=y_=0; h_=1; w_=m_.size();
+        x_=y_=0; h_=1; w_=m_.size()+4;
         callback_=c;
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE && intersect(e.y, e.x)){
+        if (e.type == EVENT::MOUSE){
           toggled_ = true;
           callback_();
         } else {
@@ -54,10 +59,10 @@ namespace ngl {
         }
       }
       void normal_draw(canvas &c){
-          c.text(y_,x_,m_);
+          c.text(y_,x_,"( )-" + m_);
       }
       void toggle_draw(canvas &c){
-          c.text(y_,x_,"##" + m_ + "##");
+          c.text(y_,x_,"(x)-" + m_ );
       }
     private:
       std::string m_;
@@ -68,6 +73,11 @@ namespace ngl {
       checkbox(int y, int x, int h, int w, std::string text="dflt_chkbx",
           std::function<void()> c=[](){}) :
         gui_entity(y,x,h,w,c), m_(text) { }
+      checkbox(int y, int x, std::string text="dflt_bttn",
+          std::function<void()> c=[](){}) : m_(text){
+        x_=x; y_=y; h_=1; w_=m_.size();
+        callback_=c;
+      }
       checkbox(std::string text="dflt_chkbx",
           std::function<void()> c=[](){}) : m_(text){
         x_=y_=0; h_=1; w_=m_.size()+4;
@@ -79,7 +89,7 @@ namespace ngl {
             &&  x_ <= x && x < x_ + w_);
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE && intersect(e.y, e.x)){
+        if (e.type == EVENT::MOUSE){
           toggled_ = true;
           callback_();
         } else {

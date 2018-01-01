@@ -136,7 +136,7 @@ void ngl::win_obj::text(int y, int x, std::string str, int just){
   if ( 0  > y || y > h_ || x > w_ || (x + (int)str.size()) < 0 )
     return;
   //fully fits in perfectly
-  else if (0 < x && x + (int)str.length() < w_){
+  else if (0 <= x && x + (int)str.length() < w_){
     mvprintw(s_y, s_x, str.data());
   }
   //cut off on left
@@ -144,7 +144,7 @@ void ngl::win_obj::text(int y, int x, std::string str, int just){
     mvprintw(s_y, s_x, str.substr(-x).data());
   }
   //cut off on right
-  else if (x > 0 && x + (int)str.length() > w_){
+  else if (0 <= x && x + (int)str.length() > w_){
     mvprintw(s_y, s_x, str.substr(0,w_ - x).data());
   }
   //cut off on both sides
