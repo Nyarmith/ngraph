@@ -52,16 +52,14 @@ namespace ngl {
       }
       void update(const event &e){
         if (e.type == EVENT::MOUSE){
-          toggled_ = true;
+          toggled_ = !toggled_;
           callback_();
-        } else {
-          toggled_ = false;
-        }
+        } 
       }
       void normal_draw(canvas &c){
           c.text(y_,x_,"( )-" + m_);
       }
-      void toggle_draw(canvas &c){
+      void toggled_draw(canvas &c){
           c.text(y_,x_,"(x)-" + m_ );
       }
     private:
@@ -90,16 +88,14 @@ namespace ngl {
       }
       void update(const event &e){
         if (e.type == EVENT::MOUSE){
-          toggled_ = true;
+          toggled_ = !toggled_;
           callback_();
-        } else {
-          toggled_ = false;
-        }
+        } 
       }
       void normal_draw(canvas &c){
           c.text(y_,x_,"[ ]-" + m_);
       }
-      void toggle_draw(canvas &c){
+      void toggled_draw(canvas &c){
           c.text(y_,x_,"[x]-" + m_);
       }
     private:

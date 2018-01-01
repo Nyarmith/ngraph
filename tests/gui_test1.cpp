@@ -1,3 +1,4 @@
+#define DEBUG
 #include "../include/cursapp.hpp"
 #include "../include/gui.hpp"
 //test basic prefab buttons and checboxes
