@@ -103,6 +103,23 @@ namespace ngl {
       std::function<void()> callback_;
   };
 
+  /*
+  class form{
+    public:
+      form()
+    private:
+      std::map<std::string, std::string> states;
+  };
+  //maybeee make a compound form class maybe(likely)
+  */
+
+  //maybe change these high-level form functions to classes so you can add them(?)
+  void boxform(window w, std::vector<str::string> entries, std::function<void(std::map<std::string, std::string>) callback){
+  }
+
+  void boxform(window w, std::vector<std::string> entries, std::function<void(std::map<std::string, std::string>) callback){
+  }
+
   //TODO: Add checkbox menu, multiple-selection-interactive menu, vertical menu, text-entry button, paragraph-entry form, mixed-forms
   
   /*
