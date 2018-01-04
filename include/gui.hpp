@@ -103,22 +103,67 @@ namespace ngl {
       std::function<void()> callback_;
   };
 
+  
   /*
-  class form{
+  typedef std::map<std::string,std::string> state_t;
+
+  class form : gui_entity{
     public:
-      form()
-    private:
-      std::map<std::string, std::string> states;
+      form(std::function<void(state_t)>
+          f=[](state_t){}) { y_=0; x_=0; h_=5; w_=5;};
+      void update(const event &e){
+        for (int i=0; i<ents_.size(); ++i){
+          ents_[i]->update(e);
+        }
+        callback_();
+      }
+      void draw(canvas &g){
+        for (int i=0; i<ents_.size(); ++i){
+          ents_[i]->draw(g);
+        }
+      }
+    protected:
+      std::map<std::string, std::string> states_;
+      std::function<void(std::map<std::string,std::string>)> callback_;
+      std::vector<entity*> ents_;
   };
-  //maybeee make a compound form class maybe(likely)
+
+  class boxform : form {
+    public:
+      boxform(int y, int x, std::vector<std::string> entries, std::function<void(state_t)> cb){
+        y_ = y;
+        x_ = x;
+      }
+      boxform(std::vector<std::string> entries, std::function<void(state_t)> cb){
+        //each entry becomes a checkbox
+        for (std::vector<entity*>::size_type i=0; i<entries.size(); ++i){
+          ents_.push_back(new checkbox(i,0,entries[i]));
+        }
+      }; 
+  };
+
+  class buttonform : form {
+    public:
+      buttonform(std::vector<std::string> entries, std::function<void(state_t)> cb){
+      }
+      buttonform(std::vector<std::string> entries, std::function<void(state_t)> cb){
+        //each entry becomes a checkbox
+        for (std::vector<entity*>::size_type i=0; i<entries.size(); ++i){
+          ents_.push_back(new text_button(i,0,entries[i]));
+        }
+      }; 
+  };
   */
 
   //maybe change these high-level form functions to classes so you can add them(?)
+  /* 
+  //TODO: Make singleton then uncomment this section
   void boxform(window w, std::vector<str::string> entries, std::function<void(std::map<std::string, std::string>) callback){
   }
 
-  void boxform(window w, std::vector<std::string> entries, std::function<void(std::map<std::string, std::string>) callback){
+  void checkform(window w, std::vector<std::string> entries, std::function<void(std::map<std::string, std::string>) callback){
   }
+  */
 
   //TODO: Add checkbox menu, multiple-selection-interactive menu, vertical menu, text-entry button, paragraph-entry form, mixed-forms
   
