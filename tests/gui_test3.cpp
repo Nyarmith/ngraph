@@ -1,7 +1,7 @@
 #include "../include/cursapp.hpp"
 #include "../include/gui.hpp"
 
-//test with form
+//same as interwindow test but with manual form creation
 
 int main(){
   using namespace std::placeholders;
@@ -13,8 +13,8 @@ int main(){
 
   left.add_entity(new boxform({"box","line","two boxes"}),
       [](std::vector<std::string,std::string> &s){
-        
-      };
+
+      });
   right.add_entity();
   
   m.run();

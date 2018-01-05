@@ -10,6 +10,14 @@ namespace ngl{
     EVENT type;
     int y,x;
     mmask_t bstate;
+    //relevant ncurses b-state flags
+    //::BUTTON1_CLICKED
+    //::BUTTON2_CLICKED
+    //::BUTTON3_CLICKED
+    //::BUTTON_SHIFT
+    //::BUTTON_CTRL
+    //::BUTTON_ALT
+    //::REPORT_MOUSE_POSITION    //(probably won't use this)
   };
 
   class poller{

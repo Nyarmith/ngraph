@@ -4,6 +4,9 @@
 
 namespace ngl {
   //Base Class
+  static const std::string CHECKED="y";
+  static const std::string UNCHECKED="n";
+
   class gui_entity : public entity {
     public:
       gui_entity(int y, int x, int h, int w, std::function<void()> c=[](){}) :
@@ -30,6 +33,7 @@ namespace ngl {
       gui_entity(){};
       bool hover_;
       bool toggled_;
+      std::string state_ = UNCHECKED;
       int y_, x_;
       int h_, w_;
       std::function<void()> callback_;
@@ -54,6 +58,10 @@ namespace ngl {
         if (e.type == EVENT::MOUSE){
           toggled_ = !toggled_;
           callback_();
+          if(toggled_)
+            state_ = CHECKED;
+          else
+            state_ = UNCHECKED;
         } 
       }
       void normal_draw(canvas &c){
@@ -90,6 +98,10 @@ namespace ngl {
         if (e.type == EVENT::MOUSE){
           toggled_ = !toggled_;
           callback_();
+          if(toggled_)
+            state_ = CHECKED;
+          else
+            state_ = UNCHECKED;
         } 
       }
       void normal_draw(canvas &c){
@@ -100,7 +112,6 @@ namespace ngl {
       }
     private:
       std::string m_;
-      std::function<void()> callback_;
   };
 
   
