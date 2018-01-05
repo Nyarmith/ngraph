@@ -55,7 +55,7 @@ namespace ngl {
         callback_=c;
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE){
+        if (e.type == EVENT::MOUSE && (e.bstate)){
           toggled_ = !toggled_;
           callback_();
           if(toggled_)
@@ -95,7 +95,7 @@ namespace ngl {
             &&  x_ <= x && x < x_ + w_);
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE){
+        if (e.type == EVENT::MOUSE && (e.bstate)){
           toggled_ = !toggled_;
           callback_();
           if(toggled_)

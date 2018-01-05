@@ -13,4 +13,5 @@
 4. Make tests pass
 5. Create conan package
 6. Make the event-handler-in-separate-thread thing dima was talking about(it can refresh 30fps if it's a game)
+7. Make test that shows ncurses bstates in hex side-by-side
 

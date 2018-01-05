@@ -69,6 +69,7 @@ namespace ngl {
       le.type = e.type;
       le.x = e.x;
       le.y = e.y;
+      le.bstate = e.bstate;
     }
     ::curs_y = curs_y; ::curs_x = curs_x;
 #endif
@@ -80,7 +81,7 @@ namespace ngl {
 
 #ifdef DEBUG
     mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, ::curs_x, ::curs_y);
-    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d", le.type,le.x,le.y);
+    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d, bstate: %#X", le.type,le.x,le.y,le.bstate);
 #endif
 
     refresh();
