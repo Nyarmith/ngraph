@@ -66,7 +66,7 @@ int main(){
 
   amorphous_entity e;
 
-  ngl::cursapp m;
+  ngl::cursapp m = ngl::cursapp::instance();
   option a(2,5,2,15,"square");
   a.setcallback( [&e](){e.update_state(0);});
   option b(4,5,2,15,"line");

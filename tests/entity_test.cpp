@@ -19,7 +19,7 @@ class mousefollower : public ngl::entity {
 int main(){
   using namespace std::placeholders;
 
-  ngl::cursapp m;
+  ngl::cursapp m = ngl::cursapp::instance();
   mousefollower r;
   ngl::window main_window(0,0,60,60);
   main_window.add_entity(&r);

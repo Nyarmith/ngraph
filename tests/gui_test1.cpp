@@ -6,7 +6,7 @@
 int main(){
   using namespace std::placeholders;
 
-  ngl::cursapp m;
+  auto m = ngl::cursapp::instance();
   auto windows = m.partition(2);
   windows[0].add_entity(new ngl::text_button("button_test_mate"));
   windows[1].add_entity(new ngl::checkbox("pls work"));

@@ -11,17 +11,23 @@ namespace ngl {
   class cursapp {
     public:
       ~cursapp() = default;
-      cursapp();
       //static cursapp *cursapp_instance;
       //static cursapp* inst();  //TODO make a singleton
 
       void run();
       void addWindow(window &n);
+      static cursapp& instance(){
+        if (!cursapp_instance)
+          cursapp_instance = new cursapp();
+        return *cursapp_instance;
+      }
 
       //fancy ways to add a window
       std::vector<window> partition(int n);  //partition evenly among n subwindows
       std::vector<window> partition(std::vector<int> n);  //partition in given ratio
     private:
+      static cursapp* cursapp_instance;
+      cursapp();
       void update();
       void draw();
       void clear();
@@ -30,7 +36,7 @@ namespace ngl {
       poller poller_;
   };
 
-  //cursapp *cursapp::cursapp_instance = 0;
+  cursapp *cursapp::cursapp_instance = 0;
 
 
   void cursapp::run(){

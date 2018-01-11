@@ -32,7 +32,7 @@ class menudrawer : public ngl::entity{
 int main(){
   using namespace std::placeholders;
 
-  ngl::cursapp m;
+  ngl::cursapp m = ngl::cursapp::instance();
   ngl::window main_window(0,0,60,60);
 
   menudrawer t;
