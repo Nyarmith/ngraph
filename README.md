@@ -7,7 +7,8 @@
 4. .run() the cursapp class
 
 ### TODO:
-1. Create generic gui classes
+0. Diagnose+Fix event bstate passing
+1. Create general form() function
 2. Create game-like test-cases
 3. Make app instance a singleton
 4. Make tests pass
