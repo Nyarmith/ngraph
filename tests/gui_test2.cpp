@@ -3,7 +3,7 @@
 #include <algorithm>
 
 //test some basic gui forms
-struct drawer : entity {
+struct drawer : public ngl::entity {
   int state=0;
   void draw(ngl::canvas &c){
     switch(state){
@@ -33,13 +33,13 @@ int main(){
 
   //left window is input of checkboxes, right window is result
   ngl::boxform(left_win, {"box", "line", "two boxes"}, 
-      [&n](std::vector<std::string> &e){
-      auto it = std::find(e.begin(), e.end(), "box");
-      if (it != e.end()) { n.state = 1; }
-      it = std::find(e.begin(), e.end(), "line");
-      if (it != e.end()) { n.state = 2; }
-      it = std::find(e.begin(), e.end(), "two boxes");
-      if (it != e.end()) { n.state = 3; }
+      [&n](bool* b){
+        if (b[0])
+          n.state=1;
+        if (b[1])
+          n.state=2;
+        if (b[2])
+          n.state=3;
       });
   right_win.add_entity(&n);
 
