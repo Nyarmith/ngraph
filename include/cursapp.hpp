@@ -1,5 +1,6 @@
 #include "../util/util.hpp"
 #include "window.hpp"
+#pragma once
 
 #ifdef DEBUG
 static ngl::event e;

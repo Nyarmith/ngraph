@@ -1,4 +1,4 @@
-#include "entity.hpp"
+#include "cursapp.hpp"
 #pragma once
 
 
@@ -114,76 +114,28 @@ namespace ngl {
       std::string m_;
   };
 
-  
-  /*
-  typedef std::map<std::string,std::string> state_t;
 
-  class form : gui_entity{
-    public:
-      form(std::function<void(state_t)>
-          f=[](state_t){}) { y_=0; x_=0; h_=5; w_=5;};
-      void update(const event &e){
-        for (int i=0; i<ents_.size(); ++i){
-          ents_[i]->update(e);
-        }
-        callback_();
-      }
-      void draw(canvas &g){
-        for (int i=0; i<ents_.size(); ++i){
-          ents_[i]->draw(g);
-        }
-      }
-    protected:
-      std::map<std::string, std::string> states_;
-      std::function<void(std::map<std::string,std::string>)> callback_;
-      std::vector<entity*> ents_;
-  };
 
-  class boxform : form {
-    public:
-      boxform(int y, int x, std::vector<std::string> entries, std::function<void(state_t)> cb){
-        y_ = y;
-        x_ = x;
-      }
-      boxform(std::vector<std::string> entries, std::function<void(state_t)> cb){
-        //each entry becomes a checkbox
-        for (std::vector<entity*>::size_type i=0; i<entries.size(); ++i){
-          ents_.push_back(new checkbox(i,0,entries[i]));
-        }
-      }; 
-  };
-
-  class buttonform : form {
-    public:
-      buttonform(std::vector<std::string> entries, std::function<void(state_t)> cb){
-      }
-      buttonform(std::vector<std::string> entries, std::function<void(state_t)> cb){
-        //each entry becomes a checkbox
-        for (std::vector<entity*>::size_type i=0; i<entries.size(); ++i){
-          ents_.push_back(new text_button(i,0,entries[i]));
-        }
-      }; 
-  };
-  */
-
-  //maybe change these high-level form functions to classes so you can add them(?)
-  /* 
-  //TODO: Make singleton then uncomment this section
-  void boxform(window w, std::vector<str::string> entries, std::function<void(std::map<std::string, std::string>) callback){
+  void boxform(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
+    int y,x;
+    y=x=1;
+    bool* cb = new bool[entries.size()];
+    for (int i=0; i<(int)entries.size(); ++i){
+      cb[i] = 0;
+      w.add_entity(new checkbox(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
+      ++y;
+    }
   }
 
-  void checkform(window w, std::vector<std::string> entries, std::function<void(std::map<std::string, std::string>) callback){
-  }
-  */
-
-  //TODO: Add checkbox menu, multiple-selection-interactive menu, vertical menu, text-entry button, paragraph-entry form, mixed-forms
-  
-  /*
-  class window_facade {
-  };
-
-  class form : window_facade {
+  void buttonform(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
+    int y,x;
+    y=x=1;
+    bool* cb = new bool[entries.size()];
+    for (int i=0; i<(int)entries.size(); ++i){
+      cb[i] = 0;
+      w.add_entity(new text_button(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
+      ++y;
+    }
   }
 
-  don't need these classes yet */
 }
