@@ -88,7 +88,8 @@ namespace ngl {
 
 #ifdef DEBUG
     mvprintw(3,3, "event type: %d,;  globlcursor x coord : %d , y coord : %d", e.type, ::curs_x, ::curs_y);
-    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d, bstate: %#X", le.type,le.x,le.y,le.bstate);
+    mvprintw(1,2, "last non-empty event: %d, x coord: %d, y coord: %d, bstate: 0x%08X", le.type,le.x,le.y,le.bstate);
+
 #endif
 
     refresh();

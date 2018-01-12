@@ -18,7 +18,7 @@ namespace nutil {
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-    //printf("\033[?1003h\n"); //lets curses track mouse movement events
+    printf("\033[?1002h\n");   //this is the one that tracks every mouse events, see http://invisible-island.net/xterm/ctlseqs/ctlseqs.html starting at section 1 0 0 0
     noecho();      //comment for testing
     curs_set(0);   //comment for testing
     if (has_colors() == TRUE){

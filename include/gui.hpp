@@ -55,7 +55,7 @@ namespace ngl {
         callback_=c;
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE && (e.bstate)){
+        if (e.type == EVENT::MOUSE && (e.bstate & BUTTON1_CLICKED)){
           toggled_ = !toggled_;
           callback_();
           if(toggled_)
@@ -95,7 +95,7 @@ namespace ngl {
             &&  x_ <= x && x < x_ + w_);
       }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE && (e.bstate)){
+        if (e.type == EVENT::MOUSE && (e.bstate & BUTTON1_CLICKED)){
           toggled_ = !toggled_;
           callback_();
           if(toggled_)
@@ -114,6 +114,8 @@ namespace ngl {
       std::string m_;
   };
 
+  //class stringform : public gui_entity {
+  //}
 
 
   void boxform(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
@@ -130,12 +132,43 @@ namespace ngl {
   void buttonform(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
     int y,x;
     y=x=1;
+    int n = (int)entries.size();
     bool* cb = new bool[entries.size()];
     for (int i=0; i<(int)entries.size(); ++i){
       cb[i] = 0;
+      w.add_entity(new text_button(y,x,entries[i],[n,cb,i,callback](){cb[i]=!cb[i]; callback(cb);})); //fuck how do I untoggle
+      ++y;
+    }
+  }
+
+  /* TODO: Complete this after stringform has been created and buttonform's logic has been sorted out
+  void form(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
+    int y,x;
+    y=x=1;
+    bool* cb = new bool[entries.size()];
+    entity* c;
+    for (int i=0; i<(int)entries.size(); ++i){
+      cb[i] = 0;
+      switch (entries[i][0]){
+        case '-':
+          c = new text_button(y,x,entries[i]);
+          ++y;
+          break;
+        case '+':
+          c = new checkbox(y,x,entries[i]);
+          ++y;
+          break;
+        case '$':
+          c = new checkbox(y,x,entries[i]);
+          ++y;
+          break;
+        default:
+          break;
+      }
       w.add_entity(new text_button(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
       ++y;
     }
   }
+  */
 
 }

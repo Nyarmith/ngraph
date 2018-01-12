@@ -7,12 +7,13 @@
 4. .run() the cursapp class
 
 ### TODO:
-0. Diagnose+Fix event bstate passing
-1. Create general form() function
-2. Create game-like test-cases
-3. Make app instance a singleton
-4. Make tests pass
-5. Create conan package
-6. Make the event-handler-in-separate-thread thing dima was talking about(it can refresh 30fps if it's a game)
-7. Make test that shows ncurses bstates in hex side-by-side
+1. Create text input widget
+2. Create widget grouped-logic(or a mechanism to handle relations between widgets groups)
+3. Create general form() function
+4. Create game-like test-cases
+5. Make app instance a singleton
+6. Make tests pass
+7. Create conan package
+8. Make the event-handler-in-separate-thread thing dima was talking about(it can refresh 30fps if it's a game)
+9. Make test that shows ncurses bstates in hex side-by-side
 
