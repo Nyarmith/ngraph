@@ -7,6 +7,7 @@
 4. .run() the cursapp class
 
 ### TODO:
+0. Create method of adding anonymous draw() method to a window
 1. Create text input widget
 2. Create widget grouped-logic(or a mechanism to handle relations between widgets groups)
 3. Create general form() function
