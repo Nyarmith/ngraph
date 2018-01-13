@@ -54,6 +54,9 @@ namespace ngl {
       void draw() { win_->draw(); };
       void refresh() { win_->refresh(); };
       void add_entity(entity *e)  { win_->add_entity(e); };
+      void add_entity(std::function<void(canvas&)> d) { win_->add_entity(new anon_entity(d)); };
+      void add_entity(std::function<void(canvas&)> d,
+          std::function<void(const event&)> u)        { win_->add_entity(new anon_entity(d,u)); };
       void add_handler(handler *h){ win_->add_handler(h);};
       bool intersect(int y,int x){ return win_->intersect(y,x); };
       window split(window& o){
