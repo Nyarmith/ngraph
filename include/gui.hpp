@@ -114,6 +114,19 @@ namespace ngl {
       std::string m_;
   };
 
+  //TODO: need better defaults for gui_entity(), also to redo defaults for above. refactor constructors somehow?
+  class textbox : public gui_entity{
+    textbox(int y, int x, int h, int w, std::string text="[type here]",
+        std::function<void()> c=[](){}) :
+      gui_entity(y,x,h,w,c), m_text) { }
+    textbox(int y, int x, std::string text="[type here]",
+        std::function<void()> c=[](){}) : m_(text){
+      x_=y_=0; h_=2; w_=m_.size();
+    }
+    private:
+      std::string m_;
+  }
+
   //class stringform : public gui_entity {
   //}
 
