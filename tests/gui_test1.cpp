@@ -8,7 +8,7 @@ int main(){
 
   auto m = ngl::cursapp::instance();
   auto windows = m.partition(2);
-  windows[0].add_entity(new ngl::text_button("button_test_mate"));
+  windows[0].add_entity(new ngl::radiobutton("button_test_mate"));
   windows[1].add_entity(new ngl::checkbox("pls work"));
 
   m.run();

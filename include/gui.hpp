@@ -39,17 +39,17 @@ namespace ngl {
       std::function<void()> callback_;
   };
 
-  class text_button : public gui_entity {
+  class radiobutton : public gui_entity {
     public:
-      text_button(int y, int x, int h, int w, std::string text="dflt_bttn",
+      radiobutton(int y, int x, int h, int w, std::string text="dflt_bttn",
           std::function<void()> c=[](){}) :
         gui_entity(y,x,h,w,c), m_(text) { }
-      text_button(int y, int x, std::string text="dflt_bttn",
+      radiobutton(int y, int x, std::string text="dflt_bttn",
           std::function<void()> c=[](){}) : m_(text){
         x_=x; y_=y; h_=1; w_=m_.size()+4;
         callback_=c;
       }
-      text_button(std::string text="dflt_bttn",
+      radiobutton(std::string text="dflt_bttn",
           std::function<void()> c=[](){}) : m_(text){
         x_=y_=0; h_=1; w_=m_.size()+4;
         callback_=c;
@@ -115,14 +115,11 @@ namespace ngl {
   };
 
   //TODO: need better defaults for gui_entity(), also to redo defaults for above. refactor constructors somehow?
+  // can't make sensible defaults for textbox w/o context of window information. might only be really "automatic" with a mixedform
   class textbox : public gui_entity{
     textbox(int y, int x, int h, int w, std::string text="[type here]",
         std::function<void()> c=[](){}) :
       gui_entity(y,x,h,w,c), m_(text) { }
-    textbox(int y, int x, std::string text="[type here]",
-        std::function<void()> c=[](){}) : m_(text){
-      x_=y_=0; h_=2; w_=m_.size();
-    }
     private:
       std::string m_;
   };
@@ -149,7 +146,7 @@ namespace ngl {
     bool* cb = new bool[entries.size()];
     for (int i=0; i<(int)entries.size(); ++i){
       cb[i] = 0;
-      w.add_entity(new text_button(y,x,entries[i],[n,cb,i,callback](){cb[i]=!cb[i]; callback(cb);})); //fuck how do I untoggle
+      w.add_entity(new radiobutton(y,x,entries[i],[n,cb,i,callback](){cb[i]=!cb[i]; callback(cb);})); //fuck how do I untoggle
       ++y;
     }
   }
