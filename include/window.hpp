@@ -17,6 +17,7 @@ namespace ngl {
       void stroke(int y1, int x1, int y2, int x2, int ch='x');
       void rect(int y, int x, int height, int width, int ch='#');
       void text(int y, int x, std::string str, int just=0);
+      void set_attr(unsigned long attrs, bool on=true);
       void set_hl(int pair);
       void clear_hl();
 
@@ -159,6 +160,13 @@ void ngl::win_obj::text(int y, int x, std::string str, int just){
 void ngl::win_obj::add_char(int y, int x, int c){
   if (0 <= x && x < w_ && 0 <= y && y < h_)
     mvaddch(y_ + y,  x_ + x, c);
+}
+
+void ngl::win_obj::set_attr(unsigned long attrs, bool on){
+  if (on)
+    attron(attrs);
+  else
+    attroff(attrs);
 }
 
 void ngl::win_obj::set_hl(int pair){

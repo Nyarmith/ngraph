@@ -18,6 +18,7 @@ namespace ngl {
         //void ellipse(int y, int x, int height, int width);
         virtual void text(int y, int x, std::string str, int just=0) = 0;
         virtual void set_hl(int pair) = 0;
+        virtual void set_attr(unsigned long attrs, bool on=true) = 0;
         virtual void clear_hl() = 0;
     };
 

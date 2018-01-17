@@ -1,7 +1,13 @@
 #include "../include/cursapp.hpp"
 #include "../include/gui.hpp"
 
-//same as interwindow test but with manual form creation
+//make a form that takes a textbox and an attribute froma radial box and then applies that to the other screen(but several at a time)
+//also tests ability to pass rendering function and have that draw
+
+std::function<void(ngl::canvas &c)> drawer_factory(){
+  //TODO: return new drawing function that goes on the next line
+}
+
 
 int main(){
   using namespace std::placeholders;
