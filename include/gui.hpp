@@ -65,10 +65,10 @@ namespace ngl {
         } 
       }
       void normal_draw(canvas &c){
-          c.text(y_,x_,"( )-" + m_);
+        c.text(y_,x_,"( )-" + m_);
       }
       void toggled_draw(canvas &c){
-          c.text(y_,x_,"(x)-" + m_ );
+        c.text(y_,x_,"(x)-" + m_ );
       }
     private:
       std::string m_;
@@ -105,23 +105,52 @@ namespace ngl {
         } 
       }
       void normal_draw(canvas &c){
-          c.text(y_,x_,"[ ]-" + m_);
+        c.text(y_,x_,"[ ]-" + m_);
       }
       void toggled_draw(canvas &c){
-          c.text(y_,x_,"[x]-" + m_);
+        c.text(y_,x_,"[x]-" + m_);
       }
     private:
       std::string m_;
   };
 
-  //TODO: need better defaults for gui_entity(), also to redo defaults for above. refactor constructors somehow?
-  // can't make sensible defaults for textbox w/o context of window information. might only be really "automatic" with a mixedform
   class textbox : public gui_entity{
     textbox(int y, int x, int h, int w, std::string text="[type here]",
         std::function<void()> c=[](){}) :
       gui_entity(y,x,h,w,c), m_(text) { }
+
+    void normal_draw(canvas &c){
+      for (int i=0; i<h_ && i*w_ < (int)m_.length(); ++i){
+        if ((int)m_.length() > (i+1)*w_)
+          c.text( y_ + i, x_, m_.substr(i*w_, (i+1)*w_) );
+        else
+          c.text( y_ + i, x_, m_.substr(i*w_) );
+      }
+    }
+
+    void update(const event &e){
+      if (e.type == EVENT::KEYBD){
+        switch(e.x){
+          case KEY_ENTER:
+            callback_(m_);
+            m_ = "";
+            break;
+          case KEY_BACKSPACE:
+            if (m_.size() > 0)
+              m_ = m_.substr(0,m_.size()-1);
+            break;
+          default:
+            m_ += static_cast<char>(e.x);
+            break;
+        }
+      }
+    }
+
+    //TODO: make toggled_ state happen and toggled_draw() thing happen
+
     private:
-      std::string m_;
+    std::string m_;
+    std::function<void(std::string)> callback_;
   };
 
   //class stringform : public gui_entity {
@@ -152,33 +181,33 @@ namespace ngl {
   }
 
   /* TODO: Complete this after stringform has been created and buttonform's logic has been sorted out
-  void form(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
-    int y,x;
-    y=x=1;
-    bool* cb = new bool[entries.size()];
-    entity* c;
-    for (int i=0; i<(int)entries.size(); ++i){
-      cb[i] = 0;
-      switch (entries[i][0]){
-        case '-':
-          c = new text_button(y,x,entries[i]);
-          ++y;
-          break;
-        case '+':
-          c = new checkbox(y,x,entries[i]);
-          ++y;
-          break;
-        case '$':
-          c = new checkbox(y,x,entries[i]);
-          ++y;
-          break;
-        default:
-          break;
-      }
-      w.add_entity(new text_button(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
-      ++y;
-    }
-  }
-  */
+     void form(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
+     int y,x;
+     y=x=1;
+     bool* cb = new bool[entries.size()];
+     entity* c;
+     for (int i=0; i<(int)entries.size(); ++i){
+     cb[i] = 0;
+     switch (entries[i][0]){
+     case '-':
+     c = new text_button(y,x,entries[i]);
+     ++y;
+     break;
+     case '+':
+     c = new checkbox(y,x,entries[i]);
+     ++y;
+     break;
+     case '$':
+     c = new checkbox(y,x,entries[i]);
+     ++y;
+     break;
+     default:
+     break;
+     }
+     w.add_entity(new text_button(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
+     ++y;
+     }
+     }
+     */
 
 }
