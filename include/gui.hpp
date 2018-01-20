@@ -115,9 +115,11 @@ namespace ngl {
   };
 
   class textbox : public gui_entity{
+    public:
     textbox(int y, int x, int h, int w, std::string text="[type here]",
-        std::function<void()> c=[](){}) :
-      gui_entity(y,x,h,w,c), m_(text) { }
+        std::function<void(std::string)> c=[](std::string m){}) :
+      gui_entity(y,x,h,w), m_(text), callback_(c) { }
+      
 
     void normal_draw(canvas &c){
       for (int i=0; i<h_ && i*w_ < (int)m_.length(); ++i){
