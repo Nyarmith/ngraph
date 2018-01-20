@@ -122,11 +122,18 @@ namespace ngl {
       
 
     void normal_draw(canvas &c){
-      for (int i=0; i<h_ && i*w_ < (int)m_.length(); ++i){
-        if ((int)m_.length() > (i+1)*w_)
-          c.text( y_ + i, x_, m_.substr(i*w_, (i+1)*w_) );
+      //draw border
+      c.rect( y_, x_, h_, w_);
+      //dimensions of drawable portion
+      int y=y_+1;
+      int x=x_+1;
+      int w = w_ - 2;
+      int h = h_ - 2;
+      for (int i=0; i<h && i*w < (int)m_.length(); ++i){
+        if ((int)m_.length() > (i+1)*w)
+          c.text( y + i, x, m_.substr(i*w, w) );
         else
-          c.text( y_ + i, x_, m_.substr(i*w_) );
+          c.text( y + i, x, m_.substr(i*w) );
       }
     }
 
@@ -142,7 +149,8 @@ namespace ngl {
               m_ = m_.substr(0,m_.size()-1);
             break;
           default:
-            m_ += static_cast<char>(e.x);
+            if ((int)m_.length() < (w_-2)*(h_-2))
+                m_ += static_cast<char>(e.x);
             break;
         }
       }
