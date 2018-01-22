@@ -16,6 +16,7 @@ namespace ngl {
       void add_char(int y, int x, int c);
       void stroke(int y1, int x1, int y2, int x2, int ch='x');
       void rect(int y, int x, int height, int width, int ch='#');
+      void box(int y, int x, int height, int width, int btype=0);
       void text(int y, int x, std::string str, int just=0);
       void set_attr(unsigned long attrs, bool on=true);
       void set_hl(int pair);
@@ -31,6 +32,9 @@ namespace ngl {
       void add_entity(entity* h){ entities_.push_back(h); }
 
       bool intersect(int y, int x);  //global coord in this win_obj?
+
+      int height() { return h_; };
+      int width() { return w_; };
 
       //adding other widnows
       win_obj* split();
@@ -60,6 +64,8 @@ namespace ngl {
           std::function<void(const event&)> u)        { win_->add_entity(new anon_entity(d,u)); };
       void add_handler(handler *h){ win_->add_handler(h);};
       bool intersect(int y,int x){ return win_->intersect(y,x); };
+      int width()  { return win_->width(); }
+      int height() { return win_->height();}
       window split(window& o){
         win_obj* new_obj = (o.win_)->split();
         return window(*new_obj);
@@ -129,6 +135,31 @@ void ngl::win_obj::rect(int y, int x, int height, int width, int ch){
     add_char(i,x,ch);
     add_char(i,x+width-1,ch);
   }
+}
+
+void ngl::win_obj::box(int y, int x, int height, int width, int btype){
+  y = y + y_;
+  x = x + x_;
+  // with alternate charset attribute enabled(A_ALTCHARSET)
+  // ┘=j
+  // └=m
+  // ┐=k
+  // ┌=l
+  // [mv]hline  =  horizontal line with chtype ch (0 is what I want)
+  // [mv]vline  =  vertical line equivalent
+  if (height < 2 || width < 2)
+    return ;//draw nothing
+
+  attron(A_ALTCHARSET); //each call here draws its respective corner
+  mvaddch(y         , x, 'l'); mvaddch(y         , x+width-1, 'k');
+  mvaddch(y+height-1, x, 'm'); mvaddch(y+height-1, x+width-1, 'j');
+  attroff(A_ALTCHARSET);
+
+  mvhline(y         , x+1    , btype, width - 2 );
+  mvhline(y+height-1, x+1    , btype, width - 2 );
+
+  mvvline(y+1     , x        , btype, height  - 2 );
+  mvvline(y+1     , x+width-1, btype, height  - 2 );
 }
 
 //todo: add some kind of thing for str justiciation

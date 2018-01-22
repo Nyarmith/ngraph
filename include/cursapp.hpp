@@ -12,8 +12,6 @@ namespace ngl {
   class cursapp {
     public:
       ~cursapp() = default;
-      //static cursapp *cursapp_instance;
-      //static cursapp* inst();  //TODO make a singleton
 
       void run();
       void addWindow(window &n);
