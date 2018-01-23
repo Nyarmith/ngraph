@@ -264,6 +264,7 @@ namespace ngl {
   const std::string button::m_ = "submit";
 
 
+  /*
   class nplot : public gui_entity {
     public:
       nplot(int y, int x, int h, int w,
@@ -312,32 +313,33 @@ namespace ngl {
     w.add_entity(new nplot(1,1,w.height() - 2, w.width() - 2, r, d, f));
           
   }
+  */
 
   void boxform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
     int y,x;
     y=x=1;
     std::vector<nstate*> ent_capture;
 
-    bool* cb = new bool[entries.size()];
+
+    entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
-      cb[i] = 0;
-      w.add_entity(new checkbox(y,x,entries[i],[cb,i,callback](){cb[i]=!cb[i]; callback(cb);}));
+      c = new checkbox(y,x,entries[i]);
+      w.add_entity(c);
+      ent_capture.push_back(dynamic_cast<nstate*>(c));
       ++y;
     }
   }
 
-  void buttonform(window w, std::vector<std::string> entries, std::function<void(bool[])> callback){
+  void buttonform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
     static int radio_group = 96;
     int y,x;
     std::vector<nstate*> ent_capture;
     y=x=1;
 
-    int n = (int)entries.size();
-    bool* cb = new bool[entries.size()];
+    entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
-      cb[i] = 0;
       //TODO, define this properly
-      w.add_entity(new radiobutton(y,x,entries[i],[n,cb,i,callback](){cb[i]=!cb[i]; callback(cb);},radio_group));
+      w.add_entity(new radiobutton(y,x,entries[i], [](){},radio_group));
       ++y;
     }
     ++radio_group;

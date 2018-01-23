@@ -32,15 +32,15 @@ int main(){
   drawer n;
 
   //left window is input of checkboxes, right window is result
-  ngl::boxform(left_win, {"box", "line", "two boxes"}, 
-      [&n](bool* b){
-        if (b[0])
-          n.state=1;
-        else if (b[1])
-          n.state=2;
-        else if (b[2])
-          n.state=3;
-      });
+//  ngl::boxform(left_win, {"box", "line", "two boxes"}, 
+//      [&n](bool* b){
+//        if (b[0])
+//          n.state=1;
+//        else if (b[1])
+//          n.state=2;
+//        else if (b[2])
+//          n.state=3;
+//      });
   right_win.add_entity(&n);
 
   //make separate "buttonform"
