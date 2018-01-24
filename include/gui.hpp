@@ -12,9 +12,13 @@ namespace ngl {
 
   class nstate {
     public:
+      nstate() { state_ = UNCHECKED; };
+      nstate(nstate& o) {state_ = o.state_;};
+      ~nstate() {};
       virtual const std::string& get_state(){ return state_; };
+      virtual bool is_checked(){ return state_ == CHECKED; };
     protected:
-      std::string state_ = UNCHECKED;
+      std::string state_;
   };
 
   class gui_entity : public entity, public nstate {
@@ -23,7 +27,8 @@ namespace ngl {
         y_(y), x_(x), h_(h), w_(w), callback_(c) { hover_ = toggled_ = false; }
 
       bool intersect(int y, int x){
-        return (y_ <= y && y < y_ + h_ &&  x_ <= x && x < x_ + w_); }
+        return (y_ <= y && y < y_ + h_ 
+            && x_ <= x && x < x_ + w_); }
 
       virtual void normal_draw(canvas& g)=0;
       virtual void hover_draw(canvas& g) { normal_draw(g); };
@@ -150,27 +155,21 @@ namespace ngl {
       checkbox(int y, int x, std::string text="dflt_bttn",
           std::function<void()> c=[](){}) : m_(text){
         x_=x; y_=y; h_=1; w_=m_.size();
-        callback_=c;
-      }
+        callback_=c; }
       checkbox(std::string text="dflt_chkbx",
           std::function<void()> c=[](){}) : m_(text){
         x_=y_=0; h_=1; w_=m_.size()+4;
-        callback_=c;
-      }
+        callback_=c; }
 
-      bool intersect(int y, int x){
-        return (y_ <= y && y < y_ + h_
-            &&  x_ <= x && x < x_ + w_);
-      }
       void update(const event &e){
-        if (e.type == EVENT::MOUSE && (e.bstate & BUTTON1_CLICKED)){
+        if (e.type == EVENT::MOUSE &&(e.bstate & BUTTON1_CLICKED)){
           toggled_ = !toggled_;
           callback_();
           if(toggled_)
             state_ = CHECKED;
           else
             state_ = UNCHECKED;
-        } 
+        }
       }
       void normal_draw(canvas &c){
         c.text(y_,x_,"[ ]-" + m_);
@@ -318,12 +317,12 @@ namespace ngl {
   void boxform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
     int y,x;
     y=x=1;
-    std::vector<nstate*> ent_capture;
-
+    //allocating on heap once per call
+    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
 
     entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
-      c = new checkbox(y,x,entries[i]);
+      c = new checkbox(y,x,entries[i], [callback,&ent_capture](){callback(ent_capture);});
       w.add_entity(c);
       ent_capture.push_back(dynamic_cast<nstate*>(c));
       ++y;
@@ -333,13 +332,15 @@ namespace ngl {
   void buttonform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
     static int radio_group = 96;
     int y,x;
-    std::vector<nstate*> ent_capture;
+    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
     y=x=1;
 
     entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
       //TODO, define this properly
-      w.add_entity(new radiobutton(y,x,entries[i], [](){},radio_group));
+      c = new radiobutton(y,x,entries[i], [callback,&ent_capture](){callback(ent_capture);}, radio_group);
+      w.add_entity(c);
+      ent_capture.push_back(dynamic_cast<nstate*>(c));
       ++y;
     }
     ++radio_group;
@@ -347,7 +348,7 @@ namespace ngl {
 
   void form(window w, std::vector<std::string> entries,
       std::function<void( std::vector<nstate*> )> callback){
-    std::vector<nstate*> ent_capture;
+    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
     int y,x;
     y=1; x=2;
 
