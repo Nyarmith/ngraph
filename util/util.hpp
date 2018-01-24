@@ -11,6 +11,19 @@
 
 namespace nutil {
   //factor out the scaffolding
+  void init_colors(){
+    //init_pair
+    //TODO: Use named macros or vars for pairs
+    init_pair(0, COLOR_WHITE,   COLOR_BLACK);
+    init_pair(1,   COLOR_BLACK,  COLOR_CYAN);
+    init_pair(2,   COLOR_BLACK,  COLOR_RED);
+    init_pair(3,   COLOR_BLACK,  COLOR_GREEN);
+    init_pair(4,   COLOR_BLACK,  COLOR_YELLOW);
+    init_pair(5,   COLOR_BLACK,  COLOR_WHITE);
+    init_pair(6,   COLOR_WHITE,  COLOR_BLUE);
+
+  }
+
   void init_curses(){
     setenv("TERM","xterm-1006",1);  //https://stackoverflow.com/questions/47256750/how-to-build-curses-program-that-supports-more-than-223-columns-of-mouse-input
     initscr();
@@ -23,6 +36,7 @@ namespace nutil {
     curs_set(0);   //comment for testing
     if (has_colors() == TRUE){
       start_color();
+      init_colors();
     } else {
       mvprintw(1,1,"error, terminal does not support colors");
       refresh();
@@ -31,5 +45,6 @@ namespace nutil {
 
     clear();
   }
+
 }
 

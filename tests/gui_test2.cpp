@@ -33,12 +33,12 @@ int main(){
 
   //left window is input of checkboxes, right window is result
   ngl::boxform(left_win, {"box", "line", "two boxes"}, 
-      [&n](std::vector<ngl::nstate*> b){
-        if (b[0]->is_checked())
+      [&n](ngl::nstate** b){
+        if (b[0]->checked())
           n.state=1;
-        else if (b[1]->is_checked())
+        else if (b[1]->checked())
           n.state=2;
-        else if (b[2]->is_checked())
+        else if (b[2]->checked())
           n.state=3;
       });
   right_win.add_entity(&n);

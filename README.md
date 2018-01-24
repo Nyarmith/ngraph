@@ -7,7 +7,7 @@
 4. .run() the cursapp class
 
 ### TODO:
-1. Make gui_test_4, gui_test_3 pass
+1. Make gui_test_4 pass
 2. Add optional border
 3. Create game-like test-cases
 4. Make tests pass

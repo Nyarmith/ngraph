@@ -8,15 +8,13 @@ namespace ngl {
   static const std::string CHECKED="y";
   static const std::string UNCHECKED="n";
 
-  //TODO move state stuff to separate smaller interface struct/class
-
   class nstate {
     public:
       nstate() { state_ = UNCHECKED; };
       nstate(nstate& o) {state_ = o.state_;};
       ~nstate() {};
       virtual const std::string& get_state(){ return state_; };
-      virtual bool is_checked(){ return state_ == CHECKED; };
+      virtual bool checked(){ return get_state() == CHECKED; };
     protected:
       std::string state_;
   };
@@ -112,6 +110,13 @@ namespace ngl {
         }
       }
 
+      virtual const std::string& get_state(){ 
+        if (button_groups_[group_] == id_){
+          return CHECKED;
+        }
+        return UNCHECKED;
+      }
+
       void draw(canvas &g){
         if (button_groups_[group_] == id_)
           toggled_draw(g);
@@ -164,11 +169,11 @@ namespace ngl {
       void update(const event &e){
         if (e.type == EVENT::MOUSE &&(e.bstate & BUTTON1_CLICKED)){
           toggled_ = !toggled_;
-          callback_();
           if(toggled_)
             state_ = CHECKED;
           else
             state_ = UNCHECKED;
+          callback_();
         }
       }
       void normal_draw(canvas &c){
@@ -263,7 +268,7 @@ namespace ngl {
   const std::string button::m_ = "submit";
 
 
-  /*
+  
   class nplot : public gui_entity {
     public:
       nplot(int y, int x, int h, int w,
@@ -275,10 +280,29 @@ namespace ngl {
           }
         };
 
+      float t_x(float x){
+        x -= domain_[0];
+        x /= (domain_[1] - domain_[0]) / (float)w_;
+        return x*(x/x);
+      }
+
+      float t_y(float y){
+        y -= domain_[0];
+        y /= (domain_[1] - domain_[0]) / (float)h_;
+        return y*(y/y);
+      }
+
       void compute_coords(){
         //setting the graph parameters
-        float x_step =  (domain_[1] - domain_[0]) / (float)w;
-        
+        float x_step =  (domain_[1] - domain_[0]) / (float)w_;
+
+        //just add one char per line for now, no interpolation(QQ)
+        //int direction = (domain_[1]-domain_[0] > 0) ? 1 : -1;
+        float x_cur = domain_[0];
+        for (int i=0; i<w_; ++i){
+          graph_.push_back( std::make_pair(t_y(f_(x_cur)), t_x(x_cur)));
+          x_cur += x_step;
+        }
       }
       void normal_draw(canvas &c) {
         //vision: graph a plot, then draw number axes on bottom
@@ -312,43 +336,42 @@ namespace ngl {
     w.add_entity(new nplot(1,1,w.height() - 2, w.width() - 2, r, d, f));
           
   }
-  */
+  
 
-  void boxform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
+  void boxform(window w, std::vector<std::string> entries, std::function<void(nstate*[])> callback){
     int y,x;
     y=x=1;
     //allocating on heap once per call
-    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
+    nstate **ents = new nstate*[entries.size()];
 
     entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
-      c = new checkbox(y,x,entries[i], [callback,&ent_capture](){callback(ent_capture);});
+      c = new checkbox(y,x,entries[i], [=](){callback(ents);});
       w.add_entity(c);
-      ent_capture.push_back(dynamic_cast<nstate*>(c));
+      ents[i] = dynamic_cast<nstate*>(c);
       ++y;
     }
   }
 
-  void buttonform(window w, std::vector<std::string> entries, std::function<void(std::vector<nstate*>)> callback){
+  void buttonform(window w, std::vector<std::string> entries, std::function<void(nstate*[])> callback){
     static int radio_group = 96;
     int y,x;
-    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
+    nstate **ents = new nstate*[entries.size()];
     y=x=1;
 
     entity* c;
     for (int i=0; i<(int)entries.size(); ++i){
-      //TODO, define this properly
-      c = new radiobutton(y,x,entries[i], [callback,&ent_capture](){callback(ent_capture);}, radio_group);
+      c = new radiobutton(y,x,entries[i], [=](){callback(ents);}, radio_group);
       w.add_entity(c);
-      ent_capture.push_back(dynamic_cast<nstate*>(c));
+      ents[i] = dynamic_cast<nstate*>(c);
       ++y;
     }
     ++radio_group;
   }
 
   void form(window w, std::vector<std::string> entries,
-      std::function<void( std::vector<nstate*> )> callback){
-    std::vector<nstate*> ent_capture = *(new std::vector<nstate*>());
+      std::function<void(nstate*[])> callback){
+    nstate **ents = new nstate*[entries.size()];
     int y,x;
     y=1; x=2;
 
@@ -385,10 +408,10 @@ namespace ngl {
           break;
       }
 
-      ent_capture.push_back(dynamic_cast<nstate*>(c));
+      ents[i] = dynamic_cast<nstate*>(c);
 
       //create button that handles the states of all these forms
-      w.add_entity(new button(y,x,[=](){ callback(ent_capture); }));
+      w.add_entity(new button(y,x,[=](){ callback(ents); }));
       ++y;
     }
   }

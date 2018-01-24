@@ -149,5 +149,12 @@ namespace ngl {
     return result;
   }
 
-}
+  // orchestrating function
+  window window::split(){
+    win_obj* new_obj = (win_)->split(); 
+    window ret(*new_obj);               
+    cursapp::instance().addWindow(ret);
+    return ret;                         
+  }
 
+}

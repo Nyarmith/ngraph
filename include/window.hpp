@@ -66,10 +66,7 @@ namespace ngl {
       bool intersect(int y,int x){ return win_->intersect(y,x); };
       int width()  { return win_->width(); }
       int height() { return win_->height();}
-      window split(window& o){
-        win_obj* new_obj = (o.win_)->split();
-        return window(*new_obj);
-      };
+      window split(); //defined in cursapp.hpp
     private:
       win_obj* win_;
   };

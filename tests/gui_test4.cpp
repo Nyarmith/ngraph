@@ -11,7 +11,6 @@ int color=0;
 bool dunno=false;
 
 int boxboi=0;
-int boxboi=0;
 
 int main(){
   using namespace std::placeholders;
@@ -29,9 +28,9 @@ int main(){
   ngl::form( middle_window,
       {"options:","-red", "-blue", "-green", "+dunno",
        "mandatories", "-powerful","-weak","-insightful"},
-      [&](std::vector<ngl::nstate*> m){
+      [&](ngl::nstate **m){
         for (int i : {1,2,3})
-          if (m[i]->get_state() == ngl::CHECKED)
+          if (m[i]->checked())
             color=i;
         });
        
