@@ -1,5 +1,7 @@
 #include "../include/gui.hpp"
 
+//random generator based on: http://tetris.wikia.com/wiki/Random_Generator
+
 //rotation: https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris
 struct block{
   std::vector<std::vector<char>> block_;
@@ -41,6 +43,7 @@ struct block{
 };
 
 
+//the list of tetris blocks: i, j, l, o, s, t, z
 struct l_block : block {
   l_block(){
     block_ = {

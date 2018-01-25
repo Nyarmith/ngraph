@@ -9,8 +9,27 @@ int function_of_x(int x){
 
 int color=0;
 bool dunno=false;
-
+unsigned int attr_flags=0;
 int boxboi=0;
+
+void boxboi_drawer(ngl::canvas &c){
+  c.set_attr(attr_flags);
+  switch(boxboi){
+    case 0:
+      //draw nothing
+      return;
+    case 1:
+      c.rect(1,1,6,5,'o');
+      break;
+    case 2:
+      c.text(4,4,"v-v-v-v-v-v-v-v");
+      break;
+    case 3:
+      c.rect(1,1,3,5,'o');
+      c.rect(4,2,3,3,'o');
+
+  }
+}
 
 int main(){
   using namespace std::placeholders;
@@ -35,16 +54,31 @@ int main(){
         });
        
 
-  ngl::button( left_window, {"box","line","two box","NONE"},
-      [&](){}
-      );
+  ngl::buttonform( left_window, {"box","line","two box","NONE"},
+      [&](ngl::nstate** b){
+      boxboi = 0;
+      for (int i : {0,1,2})
+        if (b[i]->checked())
+          boxboi = i;
+      });
+
   ngl::boxform( bottom_left, {"highlight","bold","italic","alternate-charset"},
-      [](){}
+      [&](ngl::nstate** b){
+      attr_flags = 0;
+      if (b[0]->checked())
+        attr_flags |= A_STANDOUT;
+      if (b[1]->checked())
+        attr_flags |= A_BOLD;
+      if (b[2]->checked())
+        attr_flags |= A_ITALIC;
+      if (b[3]->checked())
+        attr_flags |= A_ALTCHARSET;
+      }
       );
 
   //display some intermediate results in top-right window?
   ngl::plot( bottom_right, {0,10,0,10}, function_of_x );
 
-  right_window.add_entity(&state);
+  right_window.add_entity(boxboi_drawer);
   m.run();
 }

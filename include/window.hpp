@@ -4,6 +4,8 @@
 #include "entity.hpp"
 #pragma once
 
+//add border, make it optional to be used/displayed
+
 namespace ngl {
   class win_obj : public canvas {
     public:
