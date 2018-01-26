@@ -10,23 +10,25 @@ int function_of_x(int x){
 int color=0;
 bool dunno=false;
 unsigned int attr_flags=0;
-int boxboi=0;
+int boxboi=3;
+int mandatories=6;
 
 void boxboi_drawer(ngl::canvas &c){
   c.set_attr(attr_flags);
   switch(boxboi){
     case 0:
-      //draw nothing
-      return;
-    case 1:
       c.rect(1,1,6,5,'o');
       break;
-    case 2:
+    case 1:
       c.text(4,4,"v-v-v-v-v-v-v-v");
       break;
-    case 3:
+    case 2:
       c.rect(1,1,3,5,'o');
       c.rect(4,2,3,3,'o');
+      break;
+    case 3:
+      //draw nothing
+      return;
 
   }
 }
@@ -34,7 +36,7 @@ void boxboi_drawer(ngl::canvas &c){
 int main(){
   using namespace std::placeholders;
 
-  ngl::cursapp m = ngl::cursapp::instance();
+  ngl::cursapp &m = ngl::cursapp::instance();
   auto windows = m.partition(3);
 
   ngl::window left_window = windows[0];
@@ -51,12 +53,18 @@ int main(){
         for (int i : {1,2,3})
           if (m[i]->checked())
             color=i;
+
+        dunno = m[4]->checked();
+
+        for (int i : {6,7,8}){
+          mandatories = i;
+        }
         });
        
 
   ngl::buttonform( left_window, {"box","line","two box","NONE"},
       [&](ngl::nstate** b){
-      boxboi = 0;
+      boxboi = 3;
       for (int i : {0,1,2})
         if (b[i]->checked())
           boxboi = i;

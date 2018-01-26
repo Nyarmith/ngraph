@@ -18,7 +18,7 @@ std::function<void(ngl::canvas&)> drawer_factory(const std::string& s){
 int main(){
   using namespace std::placeholders;
 
-  ngl::cursapp m = ngl::cursapp::instance();
+  ngl::cursapp &m = ngl::cursapp::instance();
   auto windows = m.partition(2);
   ngl::window left  = windows[0];
   ngl::window right = windows[1];

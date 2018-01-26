@@ -11,6 +11,8 @@ static int curs_y, curs_x;
 namespace ngl {
   class cursapp {
     public:
+      cursapp(const cursapp& o) = delete;
+      cursapp& operator=(const cursapp&) = delete;
       ~cursapp() = default;
 
       void run();

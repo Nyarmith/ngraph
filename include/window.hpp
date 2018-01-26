@@ -193,10 +193,11 @@ void ngl::win_obj::add_char(int y, int x, int c){
 }
 
 void ngl::win_obj::set_attr(unsigned long attrs, bool on){
-  if (on)
-    attron(attrs);
-  else
-    attroff(attrs);
+  attrset(attrs);
+  //if (on)
+  //  attron(attrs);
+  //else
+  //  attroff(attrs);
 }
 
 void ngl::win_obj::set_hl(int pair){
@@ -208,10 +209,12 @@ void ngl::win_obj::clear_hl(){
 }
 
 ngl::win_obj* ngl::win_obj::split(){
+  //int o_x = x_ + w_ / 2 + h_ % 2;
+  //int o_w = w_ / 2; //this is for horizontal split
   int o_y = y_ + h_ / 2 + h_ % 2;
-  int o_x = x_ + w_ / 2 + h_ % 2;
+  int o_x = x_;
   int o_h = h_ / 2;
-  int o_w = w_ / 2;
+  int o_w = w_;
   h_ = h_ / 2 + h_ % 2;
   w_ = w_ / 2 + w_ % 2;
   return new win_obj(o_y, o_x, o_h, o_w);

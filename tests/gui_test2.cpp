@@ -24,7 +24,7 @@ struct drawer : public ngl::entity {
 int main(){
   using namespace std::placeholders;
 
-  auto m = ngl::cursapp::instance();
+  auto &m = ngl::cursapp::instance();
   auto windows = m.partition(2);
   ngl::window left_win  = windows[0];
   ngl::window right_win = windows[1];

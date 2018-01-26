@@ -247,28 +247,40 @@ namespace ngl {
       void update(const event &e){
         if (e.type == EVENT::MOUSE && (e.bstate & BUTTON1_CLICKED)){
           toggled_ = true;
+
           callback_();
         }
       }
 
       void normal_draw(canvas &c){
-        c.box(y_,x_,h_,w_,1);
+        c.box(y_,x_,h_,w_);
         c.text(y_+1, x_+1, m_.c_str());
-        c.box(y_,x_,h_,w_,1);
+        c.box(y_,x_,h_,w_);
       }
 
       void toggled_draw(canvas &c){
         attron(A_STANDOUT);
+        normal_draw(c);
         attroff(A_STANDOUT);
-        toggled_ = false;  //only do toggled draw once
+        //only be highlighted for a fixed number of frames
+        if (hl_frames_ > 0){
+          --hl_frames_;
+        }
+        else{
+          toggled_ = false;
+          hl_frames_ = frame_max_;
+        }
       }
 
+    private:
       const static std::string m_;
+      const int frame_max_=4;
+      int hl_frames_=frame_max_;
   };
   const std::string button::m_ = "submit";
 
 
-  
+
   class nplot : public gui_entity {
     public:
       nplot(int y, int x, int h, int w,
@@ -306,13 +318,13 @@ namespace ngl {
       }
       void normal_draw(canvas &c) {
         //vision: graph a plot, then draw number axes on bottom
-        
+
         //draw dots to represent a graph I guess?
         for (int i=0; i<h_; ++i)
           for (int j=0; j<w_; ++j)
             c.add_char(y_+i, x_+j, '.');
-        
-        
+
+
         for (auto i : graph_)
           c.add_char(i.first, i.second, 'x');
       };
@@ -326,7 +338,7 @@ namespace ngl {
 
 
   // -- Orchestrating Funcitons --
-  
+
   //take entire window and use it to graph a plot
   void plot(window w, std::vector<int> range_domain, std::function<int(int)> f){
     if (range_domain.size() < 4)
@@ -334,9 +346,9 @@ namespace ngl {
     int r[2] = {range_domain[0],range_domain[1]};
     int d[2] = {range_domain[2], range_domain[3]};
     w.add_entity(new nplot(1,1,w.height() - 2, w.width() - 2, r, d, f));
-          
+
   }
-  
+
 
   void boxform(window w, std::vector<std::string> entries, std::function<void(nstate*[])> callback){
     int y,x;
@@ -385,18 +397,20 @@ namespace ngl {
     for (int i=0; i<(int)entries.size() && i < hgt; ++i){
       switch (entries[i][0]){
         case '-':
-          if (!last_radio)
+          if (!last_radio){
             ++radio_group;
-          c = new radiobutton(y,x,entries[i], [](){}, radio_group);
+            last_radio=true;
+          }
+          c = new radiobutton(y,x,entries[i].substr(1), [](){}, radio_group);
           ++y;
           break;
         case '+':
-          c = new checkbox(y,x,entries[i]);
+          c = new checkbox(y,x,entries[i].substr(1));
           ++y;
           last_radio = false;
           break;
         case '$':
-          c = new textbox(y,x+1,4,wdt-4,entries[i]);
+          c = new textbox(y,x+1,4,wdt-4,entries[i].substr(1));
           y+=4;
           last_radio = false;
           break;
@@ -407,13 +421,12 @@ namespace ngl {
           last_radio = false;
           break;
       }
-
+      w.add_entity(c);
       ents[i] = dynamic_cast<nstate*>(c);
 
       //create button that handles the states of all these forms
-      w.add_entity(new button(y,x,[=](){ callback(ents); }));
-      ++y;
     }
+    w.add_entity(new button(y,x,[=](){ callback(ents); }));
   }
 }
 
