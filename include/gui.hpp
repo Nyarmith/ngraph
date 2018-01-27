@@ -274,7 +274,7 @@ namespace ngl {
 
     private:
       const static std::string m_;
-      const int frame_max_=4;
+      const int frame_max_=3;
       int hl_frames_=frame_max_;
   };
   const std::string button::m_ = "submit";
@@ -284,35 +284,43 @@ namespace ngl {
   class nplot : public gui_entity {
     public:
       nplot(int y, int x, int h, int w,
-          int range[], int domain[], std::function<int(int)> f)
+          double range[], double domain[], std::function<double(double)> f)
         : gui_entity(y,x,h,w), f_(f) {
           for (int i : {0,1}){  //woah this compiles
             domain_[i] = domain[i];
             range_[i] = range[i];
           }
+          compute_coords();
         };
 
-      float t_x(float x){
+      int t_x(double x){
         x -= domain_[0];
-        x /= (domain_[1] - domain_[0]) / (float)w_;
-        return x*(x/x);
+        x /= (domain_[1] - domain_[0]);
+        x *= (double)w_;
+        return x + .5; //rounding
       }
 
-      float t_y(float y){
+      int t_y(double y){
         y -= domain_[0];
-        y /= (domain_[1] - domain_[0]) / (float)h_;
-        return y*(y/y);
+        y /= (range_[1] - range_[0]);
+        y *= (double)h_;
+        return h_ - y + .5;
       }
 
       void compute_coords(){
         //setting the graph parameters
-        float x_step =  (domain_[1] - domain_[0]) / (float)w_;
+        double x_step =  (domain_[1] - domain_[0]) / w_;
 
         //just add one char per line for now, no interpolation(QQ)
         //int direction = (domain_[1]-domain_[0] > 0) ? 1 : -1;
-        float x_cur = domain_[0];
-        for (int i=0; i<w_; ++i){
-          graph_.push_back( std::make_pair(t_y(f_(x_cur)), t_x(x_cur)));
+        double x_cur = domain_[0];
+        float y,x;
+        for (int i=0; i<=w_; ++i){
+          //for debugging
+          y = f_(x_cur);
+          y = t_y(y);
+          x = t_x(x_cur);
+          graph_.push_back( std::make_pair(y,x));
           x_cur += x_step;
         }
       }
@@ -320,18 +328,18 @@ namespace ngl {
         //vision: graph a plot, then draw number axes on bottom
 
         //draw dots to represent a graph I guess?
-        for (int i=0; i<h_; ++i)
-          for (int j=0; j<w_; ++j)
-            c.add_char(y_+i, x_+j, '.');
+        for (int i=0; i<=h_; ++i)
+          for (int j=0; j<=w_; ++j)
+            c.add_char(i, j, '.');
 
 
         for (auto i : graph_)
           c.add_char(i.first, i.second, 'x');
       };
     private:
-      int domain_[2];
-      int range_[2];
-      std::function<int(int)> f_;
+      double domain_[2];
+      double range_[2];
+      std::function<double(double)> f_;
       std::vector<std::pair<int,int>> graph_;
   };
 
@@ -340,11 +348,11 @@ namespace ngl {
   // -- Orchestrating Funcitons --
 
   //take entire window and use it to graph a plot
-  void plot(window w, std::vector<int> range_domain, std::function<int(int)> f){
+  void plot(window w, std::vector<double> range_domain, std::function<double(double)> f){
     if (range_domain.size() < 4)
       throw std::invalid_argument( "not enough integers passed to define a domain and range" );
-    int r[2] = {range_domain[0],range_domain[1]};
-    int d[2] = {range_domain[2], range_domain[3]};
+    double r[2] = {range_domain[0],range_domain[1]};
+    double d[2] = {range_domain[2], range_domain[3]};
     w.add_entity(new nplot(1,1,w.height() - 2, w.width() - 2, r, d, f));
 
   }

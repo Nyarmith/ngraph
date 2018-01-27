@@ -3,8 +3,8 @@
 
 //test multiple custom forms to do a thing
 
-int function_of_x(int x){
-  return ((float)(x*x)/(float)(3));
+double function_of_x(double x){
+  return (x*x)/3.0;
 }
 
 int color=0;
