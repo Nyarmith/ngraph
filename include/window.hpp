@@ -15,13 +15,14 @@ namespace ngl {
       win_obj& operator=(const win_obj& o);
 
       //drawing
-      void add_char(int y, int x, int c);
-      void stroke(int y1, int x1, int y2, int x2, int ch='x');
-      void rect(int y, int x, int height, int width, int ch='#');
+      void add_char(int y, int x, unsigned int c);
+      void stroke(int y1, int x1, int y2, int x2, unsigned int ch='x');
+      void rect(int y, int x, int height, int width, unsigned int ch='#');
       void box(int y, int x, int height, int width, int btype=0);
       void text(int y, int x, std::string str, int just=0);
+      void force_attr(unsigned long attrs);
+      void set_color(int pair, bool on=true);
       void set_attr(unsigned long attrs, bool on=true);
-      void set_hl(int pair);
       void clear_hl();
 
       //interface
@@ -108,7 +109,7 @@ void ngl::win_obj::update(event &e, int y, int x){
         }
 
         // TODO : Modify drawing methods so that they don't draw outside the screen -- Priority URGENT
-void ngl::win_obj::stroke(int y1, int x1, int y2, int x2, int ch){
+void ngl::win_obj::stroke(int y1, int x1, int y2, int x2, unsigned int ch){
   double slope = static_cast<double>(y2 - y1) / (x2 - x1);
   double y = y1;
   int step=1;
@@ -122,7 +123,7 @@ void ngl::win_obj::stroke(int y1, int x1, int y2, int x2, int ch){
     x1 += step;
   }
 }
-void ngl::win_obj::rect(int y, int x, int height, int width, int ch){
+void ngl::win_obj::rect(int y, int x, int height, int width, unsigned int ch){
   int i=0;
   
   for (i=x; i < x+width; ++i){  //draw top and bottom borders
@@ -187,21 +188,28 @@ void ngl::win_obj::text(int y, int x, std::string str, int just){
   }
 }
 
-void ngl::win_obj::add_char(int y, int x, int c){
+void ngl::win_obj::add_char(int y, int x, unsigned int c){
   if (0 <= x && x < w_ && 0 <= y && y < h_)
     mvaddch(y_ + y,  x_ + x, c);
 }
 
 void ngl::win_obj::set_attr(unsigned long attrs, bool on){
-  attrset(attrs);
-  //if (on)
-  //  attron(attrs);
-  //else
-  //  attroff(attrs);
+  if (on)
+    attron(attrs);
+  else
+    attroff(attrs);
 }
 
-void ngl::win_obj::set_hl(int pair){
-  attron(pair);
+void ngl::win_obj::force_attr(unsigned long attrs){
+  attrset(attrs);
+}
+
+void ngl::win_obj::set_color(int pair, bool on){
+  //test
+  if (on)
+    attron( COLOR_PAIR( pair ) );
+  else
+    attroff( COLOR_PAIR( pair ) );
 }
 
 void ngl::win_obj::clear_hl(){

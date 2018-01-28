@@ -1,108 +1,37 @@
-#include "../include/gui.hpp"
+#include "tetris.hpp"
 
-//random generator based on: http://tetris.wikia.com/wiki/Random_Generator
 
-//rotation: https://gamedev.stackexchange.com/questions/17974/how-to-rotate-blocks-in-tetris
-struct block{
-  std::vector<std::vector<char>> block_;
-  void left_rotate(){
-    //precondition: rows and columns must be the same size
-    //1 - am I even or odd?
-    int radius = 1;
-    int c = block_.size() / 2;
-    int temp; //O(1) extra space!
-    if (block_.size() % 2 == 0){
-      for (int r=0; r<c-1; ++r){
-        //for every rotatable block along that radius
-        for (int b=-r; b <= r; ++b){
-          //swap
-          temp = block_[c+b][ c+r];
-          block_[c+b][c+r] = block_[c+r][c-b-1];
-          block_[c+r][c-b-1] = block_[c-b-1][c-r-1];
-          block_[c-b-1][c-r-1] = block_[c-r-1][c+b];
-          block_[c-r-1][c+b] = temp; //wow I hope this works
-        }
-        ++radius ;
+const int b_hgt=22;
+const int b_wdt=10;
+
+//top 2 rows should be hidden, int for each color_pair, colors:
+int board[b_hgt][b_wdt];
+
+void draw_board(ngl::canvas &c){
+  const int offset = 3;
+  for (int col=0; col<7; ++col){
+    for (int x=0; x<b_wdt; ++x)
+      for (int y=0; y<b_hgt; ++y){
+        if (board[y][x] == col)
+          c.add_char(offset + y,offset + x,'#' | COLOR_PAIR(col));
+        else
+          c.add_char(offset + y,offset + x,'.');
       }
-    } else {
-      for (int r=1; r+c<(int)block_.size(); ++r){
-        //for every rotatable block along that radius
-        for (int b=(-r + 1); b <= r; ++b){
-          //swap
-          temp = block_[c+b][ c+r];
-          block_[c+b][c+r] = block_[c + r][c - b];
-          block_[c+r][c-b] = block_[c-b][c-r];
-          block_[c-b][c-r] = block_[c-r][c+b];
-          block_[c-r][c+b] = temp;    //TODO: Verify this works
-        }
-        ++radius ;
-      }
-    }
   }
-  void right_rotate();
-};
+}
 
 
-//the list of tetris blocks: i, j, l, o, s, t, z
-struct l_block : block {
-  l_block(){
-    block_ = {
-      {' ',' ',' ',' '},
-      {'#','#','#','#'},
-      {' ',' ',' ',' '},
-      {' ',' ',' ',' '}
-    };
-  }
-};
+void move_down(block* m){
+}
 
-struct j_block : block {
-  j_block(){
-    block_ = {
-      {'#',' ',' '},
-      {'#','#','#'},
-      {' ',' ',' '}
-    };
-  }
-};
+void move_left(block* m){
+}
 
-struct t_block : block {
-  t_block(){
-    block_ = {
-      {' ','#',' '},
-      {'#','#','#'},
-      {' ',' ',' '}
-    };
-  }
-};
+void move_right(block* m){
+}
 
-struct s_block : block {
-  s_block(){
-    block_ = {
-      {' ','#','#'},
-      {'#','#',' '},
-      {' ',' ',' '}
-    };
-  }
-};
-
-struct z_block : block {
-  z_block(){
-    block_ = {
-      {'#','#',' '},
-      {' ','#','#'},
-      {' ',' ',' '}
-    };
-  }
-};
-
-
-struct o_block : block {
-  o_block(){
-    block_ = {
-      {'#','#'},
-      {'#','#'}
-    };
-  }
-  void left_rotate()  { /* do nothing */ }
-  void right_rotate() { /* do nothing */ }
-};
+int main(){
+  ngl::cursapp &m = ngl::cursapp::instance();
+  auto wins = m.partition(2);
+  wins[0].add_entity(draw_board);
+}

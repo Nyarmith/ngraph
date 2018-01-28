@@ -14,7 +14,8 @@ int boxboi=3;
 int mandatories=6;
 
 void boxboi_drawer(ngl::canvas &c){
-  c.set_attr(attr_flags);
+  c.force_attr(attr_flags | COLOR_PAIR(color));
+  
   switch(boxboi){
     case 0:
       c.rect(1,1,6,5,'o');
@@ -47,12 +48,13 @@ int main(){
   ngl::window bottom_left  = left_window.split();
 
   ngl::form( middle_window,
-      {"options:","-red", "-blue", "-green", "+dunno",
+      {"options:","-red", "-green", "-blue", "+dunno",
        "mandatories", "-powerful","-weak","-insightful"},
       [&](ngl::nstate **m){
+      color = 0;
         for (int i : {1,2,3})
           if (m[i]->checked())
-            color=i;
+          color = i;
 
         dunno = m[4]->checked();
 

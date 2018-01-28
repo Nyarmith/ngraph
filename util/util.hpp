@@ -11,17 +11,15 @@
 
 namespace nutil {
   //factor out the scaffolding
+  enum { Normal=0, Red, Green, Blue, HLRed, HLGreen, HLBlue };
   void init_colors(){
-    //init_pair
-    //TODO: Use named macros or vars for pairs
-    init_pair(0, COLOR_WHITE,   COLOR_BLACK);
-    init_pair(1,   COLOR_BLACK,  COLOR_CYAN);
-    init_pair(2,   COLOR_BLACK,  COLOR_RED);
-    init_pair(3,   COLOR_BLACK,  COLOR_GREEN);
-    init_pair(4,   COLOR_BLACK,  COLOR_YELLOW);
-    init_pair(5,   COLOR_BLACK,  COLOR_WHITE);
-    init_pair(6,   COLOR_WHITE,  COLOR_BLUE);
-
+    init_pair(Normal, COLOR_WHITE,   COLOR_BLACK);
+    init_pair(Red, COLOR_RED,   COLOR_BLACK);
+    init_pair(Green, COLOR_GREEN,   COLOR_BLACK);
+    init_pair(Blue, COLOR_BLUE,   COLOR_BLACK);
+    init_pair(HLRed, COLOR_BLACK,  COLOR_RED);
+    init_pair(HLGreen, COLOR_BLACK,  COLOR_GREEN);
+    init_pair(HLBlue, COLOR_BLACK,  COLOR_CYAN);
   }
 
   void init_curses(){
