@@ -13,7 +13,7 @@ struct block{
     int c = block_.size() / 2;
     int temp; //O(1) extra space!
     if (block_.size() % 2 == 0){
-      for (int r=0; r<c-1; ++r){
+      for (int r=0; r<=c-1; ++r){
         //for every rotatable block along that radius
         for (int b=-r; b <= r; ++b){
           //swap
@@ -40,7 +40,40 @@ struct block{
       }
     }
   }
-  void right_rotate();
+  void right_rotate(){
+    //precondition: rows and columns must be the same size
+    //1 - am I even or odd?
+    int radius = 1;
+    int c = block_.size() / 2;
+    int temp; //O(1) extra space!
+    if (block_.size() % 2 == 0){
+      for (int r=0; r<=c-1; ++r){
+        //for every rotatable block along that radius
+        for (int b=-r; b <= r; ++b){
+          //swap
+          temp = block_[c-r-1][c+b];
+          block_[c-r-1][c+b]   = block_[c-b-1][c-r-1];
+          block_[c-b-1][c-r-1] = block_[c+r][c-b-1];  
+          block_[c+r][c-b-1]   = block_[c+b][c+r];
+          block_[c+b][c+r]     = temp; //wow I hope this works
+        }
+        ++radius ;
+      }
+    } else {
+      for (int r=1; r+c<(int)block_.size(); ++r){
+        //for every rotatable block along that radius
+        for (int b=(-r + 1); b <= r; ++b){
+          //swap
+          temp = block_[c-r][c+b]; 
+          block_[c-r][c+b] = block_[c-b][c-r]; 
+          block_[c-b][c-r] = block_[c+r][c-b];
+          block_[c + r][c - b] = block_[c+b][c+r];
+          block_[c+b][ c+r] = temp;    //TODO: Verify this works
+        }
+        ++radius ;
+      }
+    }
+  }
 
 };
 
@@ -52,7 +85,7 @@ struct block{
 //Red Z
 //Blue J
 //Orange L 
-enum {CYAN=1, YELLOW, PURPLE, GREEN, RED, BLUE, ORANGE};
+enum {CYAN=1, YELLOW, PURPLE, GREEN, RED, BLUE};
 const int COLOR_ORANGE=8;
 void custom_colors(){
   init_color(COLOR_ORANGE, 1000, 840, 0);
@@ -62,7 +95,7 @@ void custom_colors(){
   init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
   init_pair(RED, COLOR_RED, COLOR_BLACK);
   init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
-  init_pair(ORANGE, COLOR_ORANGE, COLOR_BLACK);
+  init_pair(YELLOW, COLOR_ORANGE, COLOR_BLACK);
 }
 
 //the list of tetris blocks: i, j, l, o, s, t, z
@@ -91,11 +124,10 @@ struct j_block : block {
 
 struct l_block : block {
   l_block(){
-    color_ = ORANGE;
+    color_ = YELLOW;
     block_ = {
       {' ',' ','#'},
       {'#','#','#'},
-      {' ',' ',' '},
       {' ',' ',' '}
     };
   }
@@ -156,7 +188,7 @@ void permute(std::vector<block*> &blocks, std::vector<block*> &ret){
     return ;
   int e = rand() % blocks.size();
   ret.push_back(blocks[e]);
-  //delete element from blocks
+  blocks.erase(blocks.begin() + e);
   permute(blocks, ret);
 }
 
