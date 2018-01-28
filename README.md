@@ -17,3 +17,5 @@
 8. Base functionality off of ncurses6 capabilities https://www.gnu.org/software/ncurses/
 9. Change y,x coord system to x,y(maybe)
 10. Function that accepts a window, makes a permanent border-window, and returns a new sub-window(or modifies the original window and keeps the border-window inaccessible)
+11. Spatial data structure for window entities, esp for default placement of entities
+12. Add "default or fixed selected window/entity" i.e. default or fixed global cursor positions
