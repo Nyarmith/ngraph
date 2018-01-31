@@ -16,6 +16,7 @@ namespace ngl {
       ~cursapp() = default;
 
       void run();
+      void exit(){ runstate_ = false; };
       void addWindow(window &n);
       static cursapp& instance(){
         if (!cursapp_instance)
@@ -35,18 +36,21 @@ namespace ngl {
 
       std::vector<window> windows_;
       poller poller_;
+      bool runstate_=true;
   };
 
   cursapp *cursapp::cursapp_instance = 0;
 
 
   void cursapp::run(){
-    while(true){
+    while(runstate_){
       update();
       clear();
       draw();
       usleep( 33000 );
     }
+
+    endwin();
   }
 
   void cursapp::addWindow(window &n){

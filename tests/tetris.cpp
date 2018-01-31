@@ -15,7 +15,7 @@ void draw_board(ngl::canvas &c){
   const int offset = 3;
   for (int col=0; col<8; ++col){
     for (int x=0; x<b_wdt; ++x){
-      for (int y=0; y<b_hgt; ++y){
+      for (int y=2; y<b_hgt; ++y){ //top 2 rows are hidden
         if (col == 0){
           c.add_char(offset + y,offset + x,'.' | COLOR_PAIR(col));
         }
@@ -133,15 +133,15 @@ void spawn(){
   const int y=0, x=3;
   cur_block->y = y;
   cur_block->x = x;
+  if (collide(cur_block)){
+    //game over
+    ngl::cursapp::instance().exit();
+  }
 
   draw_block(cur_block);
 }
 
 void move_down(block* m){
-  if (m == NULL){
-    return;
-  }
-  undraw_block(m);
   m->y++;
   if (collide(m)){
     m->y--;
@@ -150,40 +150,24 @@ void move_down(block* m){
     cur_block = NULL;
     tetris_check();
   }
-  else{
-    draw_block(m);
-  }
 }
 
 void move_left(block* m){
-  if (m == NULL){
-    return;
-  }
   undraw_block(m);
   m->x--;
   if (collide(m))
     m->x++;
-
-  draw_block(m);
 }
 
 void move_right(block* m){
-  if (m == NULL){
-    return;
-  }
-  undraw_block(m);
   m->x++;
   if (collide(m))
     m->x--;
-
-  draw_block(m);
 }
 
 void rotate(block* m){
   //if this doesn't work, use hard-coded tetrominoes
-  undraw_block(m);
   m->left_rotate();
-  draw_block(m);
 }
 
 //main game behavior
@@ -193,6 +177,7 @@ void update_game(const ngl::event& s){
   if (cur_block == NULL){
     spawn();
   }
+  undraw_block(cur_block);
   if (s.type == ngl::KEYBD){
     switch(s.x){
       case KEY_UP: //move to "up" if keys work
@@ -210,12 +195,14 @@ void update_game(const ngl::event& s){
     }
   }
   if (turn_timer<1){
-    move_down(cur_block);
+    if (cur_block != NULL)
+      move_down(cur_block);
     turn_timer = 15;
   }
   else{
     --turn_timer;
   }
+  draw_block(cur_block);
 }
 
 int main(){
