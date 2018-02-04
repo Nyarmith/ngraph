@@ -5,9 +5,10 @@
 2. Create windows for that class
 3. Add entities and handlers to your windows
 4. .run() the cursapp class
+    
+- Look at the tests/ directory for examples
 
 ### TODO:
-0. Proper exit()
 1. Create conan package
 2. Make the event-handler-in-separate-thread thing dima was talking about(it can refresh 30fps if it's a game)
 3. Make real-time mode work well over ssh tunnel

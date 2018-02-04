@@ -81,6 +81,25 @@ class ngplot : public gui_entity{
     std::map<std::string, std::vector< std::pair<int,int> > > graph_;
 };
 
+//have form for inputting function entry
+//make parser for fn entry
+//
+
 int main(){
   ngl::cursapp &m = ngl::cursapp::instance();
+  auto wins = m.partition(2);
+
+  //left window
+  ngplot my_plot();
+
+  //right window
+  fninput input;
+  plotlister lister;
+
+  wins[0].add_entity(&my_plot);
+  wins[1].add_entity(input);
+  wins[1].add_entity(lister);
+
+  m.run();
 }
+
