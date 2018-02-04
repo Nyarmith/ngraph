@@ -335,7 +335,7 @@ namespace ngl {
 
         for (auto i : graph_)
           c.add_char(i.first, i.second, 'x');
-      };
+      }
     private:
       double domain_[2];
       double range_[2];
